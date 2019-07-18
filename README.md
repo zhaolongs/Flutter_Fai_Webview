@@ -1,12 +1,24 @@
 # flutter_fai_webview
 
-A new Flutter plugin.
+ Flutter plugin.
+ 
+ 在 Flutter 中加载 Html 的插件，实现 Flutter 中内嵌 Android ios 原生 webView 功能
+ 
+ 可监听 webview 的滑动状态 以及实现 与 Html 的JS 交互 功能
+ 
+ 
+
 
 ## Getting Started
 
 ##### 1 pubspec.yaml 中引用
 
-
+```
+  flutter_fai_webview:
+    git:
+      url: https://github.com/zhaolongs/Flutter_Fai_Webview.git
+      ref: master
+```
 
 ##### 2 引入 
 
