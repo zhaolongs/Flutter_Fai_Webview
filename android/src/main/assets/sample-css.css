@@ -1,0 +1,284 @@
+html, body {
+    font-family: "SF UI Display", ".PingFang SC", "PingFang SC", "Neue Haas Grotesk Text Pro", "Arial Nova", "Segoe UI", "Microsoft YaHei", "Microsoft JhengHei", "Helvetica Neue", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "Hiragino Sans GB", sans-serif;
+    font-size: 16px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #222222;
+    -webkit-text-size-adjust: none;
+    min-width: 200px;
+    max-width: 760px;
+    background: #feffff;
+    margin: 0 auto;
+    padding: 1rem;
+    line-height: 1.5rem;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "PT Sans", "SF UI Display", ".PingFang SC", "PingFang SC", "Neue Haas Grotesk Text Pro", "Arial Nova", "Segoe UI", "Microsoft YaHei", "Microsoft JhengHei", "Helvetica Neue", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "Hiragino Sans GB", sans-serif;
+    text-rendering: optimizelegibility;
+    margin-bottom: 1em;
+    font-weight: bold;
+    line-height: 1.8rem;
+
+}
+
+h1, h2 {
+    position: relative;
+    padding-top: 1rem;
+    padding-bottom: 0.2rem;
+    margin-bottom: 1rem;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAFUlEQVQIHWNIS0sr/v//PwMMDzY+ADqMahlW4J91AAAAAElFTkSuQmCC') bottom left repeat-x;
+}
+
+h2 {
+    padding-top: 0.8rem;
+    padding-bottom: 0.2rem;
+}
+
+h1 {
+    font-size: 1.6rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+h3 {
+    font-size: 1.2rem;
+}
+
+h4 {
+    font-size: 1.1rem;
+}
+
+h5 {
+    font-size: 1.0rem;
+}
+
+h6 {
+    font-size: 0.9rem;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-top: 0.8rem;
+    margin-bottom: 1.4rem;
+}
+
+tr {
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+}
+
+th, td {
+    padding: 5px 14px;
+    border: 1px solid #ddd;
+}
+
+blockquote {
+    font-style: italic;
+    font-size: 1.1em;
+    line-height: 1.5em;
+    padding-left: 1em;
+    border-left: 4px solid #D5D5D5;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 1.5rem;
+}
+
+a {
+    color: #1863a1
+}
+
+pre, code, p code, li code {
+    font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace
+}
+
+pre {
+    -webkit-border-radius: 0.2em;
+    -moz-border-radius: 0.2em;
+    -ms-border-radius: 0.2em;
+    -o-border-radius: 0.2em;
+    border-radius: 0.2em;
+    border: 1px solid #e7dec3;
+    line-height: 1.45em;
+    font-size: 0.9rem;
+    margin-bottom: 2.1em;
+    padding: .8em 1em;
+    color: #fefefe;
+    overflow: auto;
+    background-color: #636363;
+}
+
+p code, li code {
+    display: inline-block;
+    white-space: nowrap;
+    background: #fff;
+    font-size: 0.9rem;
+    line-height: 1.5em;
+    color: #555;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
+    -ms-border-radius: 0.4em;
+    -o-border-radius: 0.4em;
+    border-radius: 0.4em;
+    padding: 0 .3em;
+    margin: -1px 4px;
+}
+
+p pre code, li pre code {
+    font-size: 0.6em !important;
+    background: none;
+    border: none
+}
+
+img {
+    max-width: 100%;
+    -webkit-border-radius: 0.3em;
+    -moz-border-radius: 0.3em;
+    -ms-border-radius: 0.3em;
+    -o-border-radius: 0.3em;
+    border-radius: 0.3em;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.15) 0 1px 4px;
+    -moz-box-shadow: rgba(0, 0, 0, 0.15) 0 1px 4px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0 1px 4px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: #fff 0.5em solid
+}
+
+code {
+    overflow-x: auto;
+    border-radius: 3px;
+    padding: 10px;
+    line-height: 1.4;
+    word-wrap: normal;
+    display: block;
+    font-size: 13px;
+    background: #3f3f3f;
+    color: #dcdcdc;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+hr {
+    height: 0;
+    margin: 15px 0;
+    overflow: hidden;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #ddd;
+}
+
+
+/*
+
+Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+
+*/
+
+.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    background: #fdf6e3;
+    color: #657b83;
+    -webkit-text-size-adjust: none;
+}
+
+.hljs-comment,
+.diff .hljs-header,
+.hljs-doctype,
+.hljs-pi,
+.lisp .hljs-string {
+    color: #93a1a1;
+}
+
+/* Solarized Green */
+.hljs-keyword,
+.hljs-winutils,
+.method,
+.hljs-addition,
+.css .hljs-tag,
+.hljs-request,
+.hljs-status,
+.nginx .hljs-title {
+    color: #859900;
+}
+
+/* Solarized Cyan */
+.hljs-number,
+.hljs-command,
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-rule .hljs-value,
+.hljs-doctag,
+.tex .hljs-formula,
+.hljs-regexp,
+.hljs-hexcolor,
+.hljs-link_url {
+    color: #2aa198;
+}
+
+/* Solarized Blue */
+.hljs-title,
+.hljs-localvars,
+.hljs-chunk,
+.hljs-decorator,
+.hljs-built_in,
+.hljs-identifier,
+.vhdl .hljs-literal,
+.hljs-id,
+.css .hljs-function,
+.hljs-name {
+    color: #268bd2;
+}
+
+/* Solarized Yellow */
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body,
+.smalltalk .hljs-number,
+.hljs-constant,
+.hljs-class .hljs-title,
+.hljs-parent,
+.hljs-type,
+.hljs-link_reference {
+    color: #b58900;
+}
+
+/* Solarized Orange */
+.hljs-preprocessor,
+.hljs-preprocessor .hljs-keyword,
+.hljs-pragma,
+.hljs-shebang,
+.hljs-symbol,
+.hljs-symbol .hljs-string,
+.diff .hljs-change,
+.hljs-special,
+.hljs-attr_selector,
+.hljs-subst,
+.hljs-cdata,
+.css .hljs-pseudo,
+.hljs-header {
+    color: #cb4b16;
+}
+
+/* Solarized Red */
+.hljs-deletion,
+.hljs-important {
+    color: #dc322f;
+}
+
+/* Solarized Violet */
+.hljs-link_label {
+    color: #6c71c4;
+}
+
+.tex .hljs-formula {
+    background: #eee8d5;
+}
+
