@@ -6,7 +6,7 @@
  
  可监听 webview 的滑动状态 以及实现 与 Html 的JS 交互 功能
  
- 
+ 视频效果可查看 https://github.com/zhaolongs/Flutter_Fai_Webview/blob/master/video/6624F96E776F82976BA800BD7D0C5632.mp4
 
  
 
