@@ -22,6 +22,9 @@ import android.webkit.WebViewClient;
 
 import com.fai.flutter_fai_webview.view.CustomWebView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,11 +38,17 @@ public class WebviewSetingUtils {
 	private Context mContext;
 	private WebView mWebView;
 	private boolean mIsLog;
+	private boolean mAllImgSrc=false;
 	
-	public void initSetting(Context context, CustomWebView webView, boolean isLog) {
+	public void setAllImgSrc(boolean allImgSrc) {
+		mAllImgSrc = allImgSrc;
+	}
+	
+	public void initSetting(Context context, CustomWebView webView, boolean isLog,boolean picIsClick) {
 		this.mContext = context;
 		this.mWebView = webView;
 		this.mIsLog = isLog;
+		this.mAllImgSrc =picIsClick;
 		
 		//设置滑动监听
 		webView.setOnScrollChangeListener(mOnScrollChangeListener);
@@ -129,6 +138,15 @@ public class WebviewSetingUtils {
 		this.mMethodChannel = methodChannel;
 	}
 	
+	public void postError(int code, String message) {
+		Map<String, Object> lMap = new HashMap<>();
+		lMap.put("code", 1000);
+		lMap.put("message", "" + message);
+		lMap.put("content", "操作失败");
+		
+		post(lMap);
+	}
+	
 	public class ReadFinishClass {
 		/**
 		 * 页面加载成功
@@ -155,6 +173,36 @@ public class WebviewSetingUtils {
 			lMap.put("message", "js 方法回调");
 			lMap.put("content", json);
 			post(lMap);
+			
+		}
+		@JavascriptInterface
+		public void showImagePreview(String bigImageUrl) {
+			if (mIsLog) {
+				Log.e("webview showImagePreview", "web js 方法调用" + bigImageUrl);
+			}
+			
+			if (bigImageUrl != null) {
+				LogUtils.d("图片 点击 " + bigImageUrl);
+				try {
+					JSONObject lJSONObject = new JSONObject(bigImageUrl);
+					String images = lJSONObject.getString("urls");
+					int index = lJSONObject.getInt("index");
+					String url = lJSONObject.getString("url");
+					
+					final Map<String, Object> lMap = new HashMap<>();
+					lMap.put("code", 203);
+					lMap.put("message", "js 方法回调");
+					lMap.put("content", bigImageUrl);
+					lMap.put("url", url);
+					lMap.put("index", index);
+					lMap.put("images", images);
+					post(lMap);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			
 			
 		}
 	}
@@ -274,7 +322,10 @@ public class WebviewSetingUtils {
 			// mMainWebView.loadUrl("javascript:readBookDesPageFinish(" + mArticleModel.id + ")");
 			//测量webview
 			mWebView.loadUrl("javascript:controll.pageFinish(document.body.getBoundingClientRect().height)");
-			//mWebView.loadUrl("javascript:getAllImgSrc(document.body.innerHTML)");
+			if (mAllImgSrc) {
+				mWebView.loadUrl("javascript:getAllImgSrc(document.body.innerHTML)");
+			}
+			
 			
 			
 		}
@@ -364,12 +415,18 @@ public class WebviewSetingUtils {
 		}
 	};
 	
-	
+	/**
+	 * code :203 图片点击回调
+	 * // url 当前点击图片的链接 index 当前点击Html页面中所有图片中的角标 urls 所有图片的集合
+	 * content: {"url":"http://pic.studyyoun.com/1543767087584","index":0,"urls":"http://pic.studyyoun.com/1543767087584,http://pic.studyyoun.com/1543767100547"}
+	 *
+	 */
 	/**
 	 * 向 Flutter 中发送消息
 	 * code
 	 * 201 测量webview 成功
 	 * 202 JS调用
+	 * 203 图片点击回调
 	 * 301 滑动到顶部
 	 * 302 向下滑动
 	 * 303	向上滑动
@@ -378,6 +435,8 @@ public class WebviewSetingUtils {
 	 * 402 webview 加载完成
 	 * 403 webview html中日志输出
 	 * 404 webview 加载出错
+	 * <p>
+	 * 1000 操作失败
 	 *
 	 * @param map
 	 */

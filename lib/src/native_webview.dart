@@ -20,11 +20,14 @@ class FaiWebViewWidget extends StatefulWidget {
   //日志输出
   bool isLog = false;
 
+  bool htmlImageIsClick = false;
+
   //回调
   Function(int code, String message, dynamic content) callback;
+  Function(int index, String url,String images) imageCallBack;
 
   FaiWebViewWidget(
-      {this.callback, this.url, this.htmlData, this.htmlBlockData, this.isLog});
+      {this.callback, this.url, this.htmlData, this.htmlBlockData, this.isLog,this.htmlImageIsClick,this.imageCallBack});
 
   @override
   State<StatefulWidget> createState() {
@@ -32,6 +35,8 @@ class FaiWebViewWidget extends StatefulWidget {
         url: url,
         htmlBlockData: htmlBlockData,
         isLog: isLog,
+        htmlImageIsClick: htmlImageIsClick,
+        imageCallBack: imageCallBack,
         htmlData: htmlData);
     return viewState;
   }
@@ -51,23 +56,21 @@ class FaiWebViewWidget extends StatefulWidget {
 class AndroidWebViewState extends State<FaiWebViewWidget> {
   //加载的网页 URL
   String url;
-
+  //自定义网页中的所有的图片的点击事件处理
+  bool htmlImageIsClick = false;
   //加载 完整html 文件数据 如 <html><head> .... .. </head></html>
   String htmlData;
-
   //加载 html 代码块 如<p> .... </p>
   String htmlBlockData;
-
   //日志输出
   bool isLog = false;
   int viewId = -1;
   MethodChannel _channel;
-
   //回调
   Function(int code, String message, dynamic content) callback;
-
+  Function(int index, String url,String images) imageCallBack;
   AndroidWebViewState(this.callback,
-      {this.url, this.htmlData, this.htmlBlockData, this.isLog});
+      {this.url, this.htmlData, this.htmlBlockData, this.isLog,this.htmlImageIsClick=false,this.imageCallBack});
 
   @override
   void initState() {
@@ -146,6 +149,16 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
           "; content " +
           content.toString());
 
+      if(code==203){
+        int index = arguments["index"];
+        String url = arguments["url"];
+        String urls = arguments["urls"];
+        if(imageCallBack!=null){
+          imageCallBack(index,url,urls);
+        }
+
+      }
+
       if (callback != null) {
         print("native_webview callback" );
         callback(code, message, content);
@@ -174,6 +187,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       creationParams: {
         //调用view参数标识
         "isScrollListen": true,
+        "htmlImageIsClick":htmlImageIsClick
       },
       //参数的编码方式
       creationParamsCodec: const StandardMessageCodec(),

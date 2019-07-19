@@ -29,12 +29,12 @@
         _webView.delegate=self;
         _webView.scrollView.delegate = self;
         _viewId = viewId;
-
+        
         //接收 初始化参数
         NSDictionary *dic = args;
         NSString *content = dic[@"content"];
-
-
+        
+        
         // 注册flutter 与 ios 通信通道
         NSString* channelName = [NSString stringWithFormat:@"com.flutter_to_native_webview_%lld", viewId];
         _channel = [FlutterMethodChannel methodChannelWithName:channelName binaryMessenger:messenger];
@@ -42,10 +42,10 @@
         [_channel setMethodCallHandler:^(FlutterMethodCall *  call, FlutterResult  result) {
             [weakSelf onMethodCall:call result:result];
         }];
-
+        
     }
     return self;
-
+    
 }
 
 -(void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result{
@@ -53,10 +53,35 @@
         //获取参数
         NSDictionary *dict = call.arguments;
         NSString *url = dict[@"url"];
-        NSURL *requestUrl = [NSURL URLWithString:url];
-        NSURLRequest *request = [NSURLRequest requestWithURL:requestUrl];
-        [_webView loadRequest:request];
-
+        NSString *htmlData = dict[@"htmlData"];
+        NSString *htmlDataBlock = dict[@"htmlBlockData"];
+        if (![url isKindOfClass:[NSNull class]]&& url!=nil) {
+            NSURL *requestUrl = [NSURL URLWithString:url];
+            NSURLRequest *request = [NSURLRequest requestWithURL:requestUrl];
+            [_webView loadRequest:request];
+        }else if(![htmlData isKindOfClass:[NSNull class]]&&htmlData!=nil){
+            NSData *data =[htmlData dataUsingEncoding:NSUTF8StringEncoding];
+            [_webView loadData:data MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:nil];
+            
+        }else if(![htmlDataBlock isKindOfClass:[NSNull class]]&&htmlDataBlock!=nil){
+            
+            /**
+             *1、在Info.plist中添加 NSAppTransportSecurity 类型 Dictionary ;
+             *2、在 NSAppTransportSecurity 下添加 NSAllowsArbitraryLoads 类型Boolean ,值设为 YES
+             *
+             */
+            NSArray * array = [htmlDataBlock componentsSeparatedByString:@"</head>"];
+            if(array.count==2){
+                htmlDataBlock=[NSString stringWithFormat:@"%@  %@ %@ %@",array[0],@"<meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" > ",@" <style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:99%;height:auto;}</style>  </head> ",array[1]];
+            }else{
+                htmlDataBlock=[NSString stringWithFormat:@"<html><head> <meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" >  <style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:99%;height:auto;}</style> <body> %@ </body></html>",htmlDataBlock];
+            }
+            NSData *data =[htmlDataBlock dataUsingEncoding:NSUTF8StringEncoding];
+            [_webView loadData:data MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:nil];
+            
+        }
+        
+        
     }else  if ([[call method] isEqualToString:@"reload"]) {
         if (_webView!=nil) {
             [_webView reload];
@@ -82,7 +107,7 @@
     [dict setObject:[NSNumber numberWithInt:401] forKey:@"code"];
     [dict setObject:@"webview 开始加载" forKey:@"message"];
     [dict setObject:@"success" forKey:@"content"];
-
+    
     [self messagePost:dict];
 }
 
@@ -92,53 +117,53 @@
     [dict setObject:[NSNumber numberWithInt:402] forKey:@"code"];
     [dict setObject:@"webview 加载完成" forKey:@"message"];
     [dict setObject:@"success" forKey:@"content"];
-
+    
     [self messagePost:dict];
-
-
-
+    
+    
+    
     JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     //定义好JS要调用的方法, share就是调用的share方法名
-     context[@"pageFinish"] = ^() {
-
-         NSArray *args = [JSContext currentArguments];
-         JSValue *height = args[0];
-         NSLog(@"测量完成 %@",height);
-         NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
-         [dict2 setObject:[NSNumber numberWithInt:201] forKey:@"code"];
-         [dict2 setObject:@"测量成功V" forKey:@"message"];
-         [dict2 setObject:[NSNumber numberWithInt:height.toDouble] forKey:@"content"];
-         
-         [self messagePost:dict2];
-     };
-
+    context[@"pageFinish"] = ^() {
+        
+        NSArray *args = [JSContext currentArguments];
+        JSValue *height = args[0];
+        NSLog(@"测量完成 %@",height);
+        NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
+        [dict2 setObject:[NSNumber numberWithInt:201] forKey:@"code"];
+        [dict2 setObject:@"测量成功V" forKey:@"message"];
+        [dict2 setObject:[NSNumber numberWithInt:height.toDouble] forKey:@"content"];
+        
+        [self messagePost:dict2];
+    };
+    
     [webView stringByEvaluatingJavaScriptFromString:@"javascript:pageFinish(document.body.getBoundingClientRect().height)"];
 }
 
 // Sent if a web view failed to load a frame. 网页请求失败则会调用该方法
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:[NSNumber numberWithInt:404] forKey:@"code"];
     [dict setObject:@"webview 加载出错" forKey:@"message"];
     [dict setObject:@"err" forKey:@"content"];
-
+    
     [self messagePost:dict];
 }
 
 // 开始
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-
+    
 }
 
 // 结束
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-
+    
 }
 
 int _lastPosition;
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
-
+    
     int currentPostion = scrollView.contentOffset.y;
     if (currentPostion - _lastPosition > 25) {
         _lastPosition = currentPostion;
@@ -148,7 +173,7 @@ int _lastPosition;
         [dict setObject:[NSNumber numberWithInt:303] forKey:@"code"];
         [dict setObject:@"webview 向上滑动" forKey:@"message"];
         [dict setObject:@"scroll " forKey:@"content"];
-
+        
         [self messagePost:dict];
     }
     else if (_lastPosition - currentPostion > 25)
@@ -160,17 +185,17 @@ int _lastPosition;
         [dict setObject:[NSNumber numberWithInt:302] forKey:@"code"];
         [dict setObject:@"webview 向下滑动" forKey:@"message"];
         [dict setObject:@"scroll" forKey:@"content"];
-
+        
         [self messagePost:dict];
     }
-
-
-
+    
+    
+    
 }
 
 
 -(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)conOffset{
-
+    
     if (velocity.y > 0.0f) {
         //不在顶部
         NSLog(@"ScrollDown now");
@@ -188,21 +213,21 @@ int _lastPosition;
             [dict setObject:@"scroll" forKey:@"content"];
             [self messagePost:dict];
         }
-
-
+        
+        
     }else if (velocity.y < - 0.0f ){
         //在顶部
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setObject:[NSNumber numberWithInt:301] forKey:@"code"];
         [dict setObject:@"webview 滑动到了顶部" forKey:@"message"];
         [dict setObject:@"scroll" forKey:@"content"];
-
+        
         [self messagePost:dict];
-
+        
     }else{
         //在中间
     }
-
+    
 }
 
 
@@ -210,7 +235,7 @@ int _lastPosition;
 
 
 -(void) messagePost:(NSDictionary *)dict{
-
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         // UI更新代码
         [self->_channel invokeMethod:@"ios" arguments:dict];
