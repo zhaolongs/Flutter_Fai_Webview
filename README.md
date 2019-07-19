@@ -8,6 +8,8 @@
  
  
 
+ 
+
 
 ## Getting Started
 
@@ -80,3 +82,12 @@ import 'package:flutter_fai_webview/flutter_fai_webview.dart';
     });
   }
 ```
+
+
+***** 
+
+
+##### 5  全屏引用 
+
+
+

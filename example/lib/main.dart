@@ -139,9 +139,11 @@ class _MyAppState extends State<MyApp> {
 
   callBack(int code, String msg, content) {
     //加载页面完成后 对页面重新测量的回调
+
     if (code == 201) {
       webViewHeight = content;
-    }else{
+      print("webViewHeight "+webViewHeight.toString());
+    } else {
       //其他回调
     }
     setState(() {
@@ -230,6 +232,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget buildRefreshHexWidget() {
+    print("build "+webViewHeight.toString());
     return RefreshIndicator(
       //下拉刷新触发方法
       onRefresh: _onRefresh,
@@ -238,6 +241,7 @@ class _MyAppState extends State<MyApp> {
         child: Column(
           children: <Widget>[
             Container(
+              height: 200,
               child: Text("这里是标题部分"),
               color: Colors.grey,
             ),
@@ -256,13 +260,7 @@ class _MyAppState extends State<MyApp> {
   Future<Null> _onRefresh() async {
     return await Future.delayed(Duration(seconds: 1), () {
       print('refresh');
-      setState(() {
-        webViewWidget = FaiWebViewWidget(
-          url: htmlUrl,
-          callback: callBack,
-          isLog: true,
-        );
-      });
+      webViewWidget.refresh();
     });
   }
 }

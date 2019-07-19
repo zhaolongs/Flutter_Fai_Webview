@@ -41,7 +41,7 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 		ViewGroup.LayoutParams lLayoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		lWebView.setLayoutParams(lLayoutParams);
 		this.mWebView = lWebView;
-		
+
 
 //
 		//初始化设置
@@ -82,59 +82,69 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 		 *
 		 */
 		if (lMethod.equals("load")) {
-			Map<String, String> params = (Map<String, String>) methodCall.arguments;
-			//加载页面
-			//加载链接
-			if (params != null && params.containsKey("url")) {
-				//通过 url 来加载页面
-				String url = (String) params.get("url");
-				mWebView.loadUrl(url);
-			} else if (params != null && params.containsKey("htmlData")) {
-				//加载html文件数据
-				String artContent = (String) params.get("htmlData");
-				//加载html完整页面
-				mWebView.loadDataWithBaseURL(null, artContent, "text/html", "utf-8", null);
-			} else if (params != null && params.containsKey("htmlBlockData")) {
-				//加载html文件数据
-				String artContent = (String) params.get("htmlBlockData");
-				//加载html 代码块
-				//在这里构造一个完整的html
-				String[] split = artContent.split("</head>");
-				if (split.length == 2) {
-					StringBuilder stringBuilder = new StringBuilder(split[0]);
-					stringBuilder.append("<meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" >\n");
-					stringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/sample-css.css\"/> \n");
-					stringBuilder.append("<style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:80%;height:auto;}</style>");
-					stringBuilder.append("<script type=\"text/javascript\" src=\"file:///android_asset/client.js\"></script>");
-					
-					stringBuilder.append("</head>");
-					stringBuilder.append(split[1]);
-					
-					artContent = stringBuilder.toString();
-					
-					mWebView.loadDataWithBaseURL(null, artContent, "text/html", "utf-8",
-							null);
-				} else {
-					//ToastUtils.show("数据异常,请重新进入", mContext);
-					StringBuilder stringBuilder = new StringBuilder();
-					stringBuilder.append("<html><head>");
-					stringBuilder.append("<meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" >\n");
-					stringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/sample-css.css\"/> \n");
-					stringBuilder.append("<style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:80%;height:auto;}</style>");
-					stringBuilder.append("<script type=\"text/javascript\" src=\"file:///android_asset/client.js\"></script>");
-					
-					stringBuilder.append("</head><body>");
-					stringBuilder.append(artContent);
-					stringBuilder.append("</body></html>");
-					
-					artContent = stringBuilder.toString();
-				}
-				mWebView.loadDataWithBaseURL(null, artContent, "text/html", "utf-8", null);
-			} else {
-				Toast.makeText(mContext, "数据异常,请重新进入", Toast.LENGTH_SHORT).show();
+			initLoadHtml(methodCall);
+		} else if (lMethod.equals("reload")) {
+			//刷新webview
+			if (mWebView != null) {
+				mWebView.reload();
 			}
+			
 		}
 		
+	}
+	
+	private void initLoadHtml(MethodCall methodCall) {
+		Map<String, String> params = (Map<String, String>) methodCall.arguments;
+		//加载页面
+		//加载链接
+		if (params != null && params.containsKey("url")) {
+			//通过 url 来加载页面
+			String url = (String) params.get("url");
+			mWebView.loadUrl(url);
+		} else if (params != null && params.containsKey("htmlData")) {
+			//加载html文件数据
+			String artContent = (String) params.get("htmlData");
+			//加载html完整页面
+			mWebView.loadDataWithBaseURL(null, artContent, "text/html", "utf-8", null);
+		} else if (params != null && params.containsKey("htmlBlockData")) {
+			//加载html文件数据
+			String artContent = (String) params.get("htmlBlockData");
+			//加载html 代码块
+			//在这里构造一个完整的html
+			String[] split = artContent.split("</head>");
+			if (split.length == 2) {
+				StringBuilder stringBuilder = new StringBuilder(split[0]);
+				stringBuilder.append("<meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" >\n");
+				stringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/sample-css.css\"/> \n");
+				stringBuilder.append("<style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:80%;height:auto;}</style>");
+				stringBuilder.append("<script type=\"text/javascript\" src=\"file:///android_asset/client.js\"></script>");
+				
+				stringBuilder.append("</head>");
+				stringBuilder.append(split[1]);
+				
+				artContent = stringBuilder.toString();
+				
+				mWebView.loadDataWithBaseURL(null, artContent, "text/html", "utf-8",
+						null);
+			} else {
+				//ToastUtils.show("数据异常,请重新进入", mContext);
+				StringBuilder stringBuilder = new StringBuilder();
+				stringBuilder.append("<html><head>");
+				stringBuilder.append("<meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" >\n");
+				stringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/sample-css.css\"/> \n");
+				stringBuilder.append("<style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:80%;height:auto;}</style>");
+				stringBuilder.append("<script type=\"text/javascript\" src=\"file:///android_asset/client.js\"></script>");
+				
+				stringBuilder.append("</head><body>");
+				stringBuilder.append(artContent);
+				stringBuilder.append("</body></html>");
+				
+				artContent = stringBuilder.toString();
+			}
+			mWebView.loadDataWithBaseURL(null, artContent, "text/html", "utf-8", null);
+		} else {
+			Toast.makeText(mContext, "数据异常,请重新进入", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 }

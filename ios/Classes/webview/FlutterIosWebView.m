@@ -7,7 +7,7 @@
 //
 
 #import "FlutterIosWebView.h"
-
+#import <JavaScriptCore/JavaScriptCore.h>
 @interface FlutterIosWebView() <UIWebViewDelegate,UIScrollViewDelegate>
 
 @end
@@ -57,6 +57,10 @@
         NSURLRequest *request = [NSURLRequest requestWithURL:requestUrl];
         [_webView loadRequest:request];
 
+    }else  if ([[call method] isEqualToString:@"reload"]) {
+        if (_webView!=nil) {
+            [_webView reload];
+        }
     }else{
         //其他方法的回调
     }
@@ -90,6 +94,25 @@
     [dict setObject:@"success" forKey:@"content"];
 
     [self messagePost:dict];
+
+
+
+    JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    //定义好JS要调用的方法, share就是调用的share方法名
+     context[@"pageFinish"] = ^() {
+
+         NSArray *args = [JSContext currentArguments];
+         JSValue *height = args[0];
+         NSLog(@"测量完成 %@",height);
+         NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
+         [dict2 setObject:[NSNumber numberWithInt:201] forKey:@"code"];
+         [dict2 setObject:@"测量成功V" forKey:@"message"];
+         [dict2 setObject:[NSNumber numberWithInt:height.toDouble] forKey:@"content"];
+         
+         [self messagePost:dict2];
+     };
+
+    [webView stringByEvaluatingJavaScriptFromString:@"javascript:pageFinish(document.body.getBoundingClientRect().height)"];
 }
 
 // Sent if a web view failed to load a frame. 网页请求失败则会调用该方法
@@ -168,7 +191,7 @@ int _lastPosition;
 
 
     }else if (velocity.y < - 0.0f ){
-       //在顶部
+        //在顶部
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setObject:[NSNumber numberWithInt:301] forKey:@"code"];
         [dict setObject:@"webview 滑动到了顶部" forKey:@"message"];

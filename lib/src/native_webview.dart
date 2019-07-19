@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'native_webview_event.dart';
 
 class FaiWebViewWidget extends StatefulWidget {
   //加载的网页 URL
@@ -25,7 +28,7 @@ class FaiWebViewWidget extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    viewState=new AndroidWebViewState(callback,
+    viewState = new AndroidWebViewState(callback,
         url: url,
         htmlBlockData: htmlBlockData,
         isLog: isLog,
@@ -35,10 +38,13 @@ class FaiWebViewWidget extends StatefulWidget {
 
   AndroidWebViewState viewState;
 
-  void refresh(
-      {String htmlData, String htmlBlockData, String htmlUrl}) {
-     viewState.refresh(htmlData,htmlBlockData,htmlUrl);
-
+  void refresh({String htmlData, String htmlBlockData, String htmlUrl}) {
+    NativeEventMessage.getDefault().post({
+      "code": 100,
+      "htmlUrl": htmlUrl,
+      "htmlBlockData": htmlBlockData,
+      "htmlData": htmlData,
+    });
   }
 }
 
@@ -67,6 +73,31 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    NativeEventMessage.getDefault().register((event) {
+      int code = event["code"];
+      if (code == 100) {
+        String htmlData = event["htmlData"];
+        String htmlBlockData = event["htmlBlockData"];
+        String htmlUrl = event["htmlUrl"];
+
+        if (htmlData != null) {
+          this.htmlData = htmlData;
+        }
+        if (htmlBlockData != null) {
+          this.htmlBlockData = htmlBlockData;
+        }
+        if (htmlUrl != null) {
+          this.url = htmlUrl;
+        }
+        refresh();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+   // NativeEventMessage.getDefault().unregister();
   }
 
   @override
@@ -116,7 +147,10 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
           content.toString());
 
       if (callback != null) {
+        print("native_webview callback" );
         callback(code, message, content);
+      }else{
+        print("native_webview callback is null " );
       }
     });
   }
@@ -128,8 +162,9 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       "htmlBlockData": htmlBlockData,
     });
   }
-
-
+  void reLoad() async {
+    _channel.invokeMethod('reload');
+  }
 
   Widget buildAndroidWebView() {
     return AndroidView(
@@ -181,20 +216,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     );
   }
 
-  void refresh(String htmlData, String htmlBlockData, String htmlUrl) {
-    if(htmlData!=null){
-      this.htmlData = htmlData;
-    }
-    if(htmlBlockData!=null){
-      this.htmlBlockData = htmlBlockData;
-    }
-    if(htmlUrl!=null){
-      this.url = htmlUrl;
-    }
-
-    loadUrl();
-
+  void refresh() {
+    reLoad();
   }
-
-
 }
