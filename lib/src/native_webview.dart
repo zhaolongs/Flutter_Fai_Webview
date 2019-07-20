@@ -24,10 +24,16 @@ class FaiWebViewWidget extends StatefulWidget {
 
   //回调
   Function(int code, String message, dynamic content) callback;
-  Function(int index, String url,String images) imageCallBack;
+  Function(int index, String url, List<String> images) imageCallBack;
 
   FaiWebViewWidget(
-      {this.callback, this.url, this.htmlData, this.htmlBlockData, this.isLog,this.htmlImageIsClick,this.imageCallBack});
+      {this.callback,
+      this.url,
+      this.htmlData,
+      this.htmlBlockData,
+      this.isLog,
+      this.htmlImageIsClick = false,
+      this.imageCallBack});
 
   @override
   State<StatefulWidget> createState() {
@@ -51,26 +57,44 @@ class FaiWebViewWidget extends StatefulWidget {
       "htmlData": htmlData,
     });
   }
+
+  void loadJsMethod(String string) {
+    NativeEventMessage.getDefault().post({
+      "code": 101,
+      "string": string,
+    });
+  }
 }
 
 class AndroidWebViewState extends State<FaiWebViewWidget> {
   //加载的网页 URL
   String url;
+
   //自定义网页中的所有的图片的点击事件处理
   bool htmlImageIsClick = false;
+
   //加载 完整html 文件数据 如 <html><head> .... .. </head></html>
   String htmlData;
+
   //加载 html 代码块 如<p> .... </p>
   String htmlBlockData;
+
   //日志输出
   bool isLog = false;
   int viewId = -1;
   MethodChannel _channel;
+
   //回调
   Function(int code, String message, dynamic content) callback;
-  Function(int index, String url,String images) imageCallBack;
+  Function(int index, String url, List<String> images) imageCallBack;
+
   AndroidWebViewState(this.callback,
-      {this.url, this.htmlData, this.htmlBlockData, this.isLog,this.htmlImageIsClick=false,this.imageCallBack});
+      {this.url,
+      this.htmlData,
+      this.htmlBlockData,
+      this.isLog,
+      this.htmlImageIsClick = false,
+      this.imageCallBack});
 
   @override
   void initState() {
@@ -93,6 +117,9 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
           this.url = htmlUrl;
         }
         refresh();
+      }else if(code==101){
+        String string = event["string"];
+        loadJsMethod(string);
       }
     });
   }
@@ -100,7 +127,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   @override
   void dispose() {
     super.dispose();
-   // NativeEventMessage.getDefault().unregister();
+    // NativeEventMessage.getDefault().unregister();
   }
 
   @override
@@ -149,21 +176,20 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
           "; content " +
           content.toString());
 
-      if(code==203){
+      if (code == 203) {
         int index = arguments["index"];
         String url = arguments["url"];
-        String urls = arguments["urls"];
-        if(imageCallBack!=null){
-          imageCallBack(index,url,urls);
+        List<String> urls = arguments["urls"];
+        if (imageCallBack != null) {
+          imageCallBack(index, url, urls);
         }
-
       }
 
       if (callback != null) {
-        print("native_webview callback" );
+        print("native_webview callback");
         callback(code, message, content);
-      }else{
-        print("native_webview callback is null " );
+      } else {
+        print("native_webview callback is null ");
       }
     });
   }
@@ -175,6 +201,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       "htmlBlockData": htmlBlockData,
     });
   }
+
   void reLoad() async {
     _channel.invokeMethod('reload');
   }
@@ -187,7 +214,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       creationParams: {
         //调用view参数标识
         "isScrollListen": true,
-        "htmlImageIsClick":htmlImageIsClick
+        "htmlImageIsClick": htmlImageIsClick
       },
       //参数的编码方式
       creationParamsCodec: const StandardMessageCodec(),
@@ -213,6 +240,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       creationParams: {
         //调用view参数标识
         "isScrollListen": true,
+        "htmlImageIsClick": htmlImageIsClick
       },
       //参数的编码方式
       creationParamsCodec: const StandardMessageCodec(),
@@ -232,5 +260,11 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
 
   void refresh() {
     reLoad();
+  }
+
+  void loadJsMethod(String string) async {
+    _channel.invokeMethod('jsload', {
+      "string": string,
+    });
   }
 }

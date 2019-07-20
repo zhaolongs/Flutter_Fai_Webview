@@ -1,6 +1,7 @@
 package com.fai.flutter_fai_webview.utils;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -20,11 +21,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 
+import com.fai.flutter_fai_webview.R;
 import com.fai.flutter_fai_webview.view.CustomWebView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -147,6 +151,10 @@ public class WebviewSetingUtils {
 		post(lMap);
 	}
 	
+	public void loadJsMethod(String jsMethod) {
+		mWebView.loadUrl("javascript:"+jsMethod);
+	}
+	
 	public class ReadFinishClass {
 		/**
 		 * 页面加载成功
@@ -191,11 +199,12 @@ public class WebviewSetingUtils {
 					
 					final Map<String, Object> lMap = new HashMap<>();
 					lMap.put("code", 203);
-					lMap.put("message", "js 方法回调");
+					lMap.put("message", "图片点击 方法回调");
 					lMap.put("content", bigImageUrl);
 					lMap.put("url", url);
 					lMap.put("index", index);
-					lMap.put("images", images);
+					String[] lSplit = images.split(",");
+					lMap.put("images", Arrays.asList(lSplit));
 					post(lMap);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -213,7 +222,13 @@ public class WebviewSetingUtils {
 		@Override
 		public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
 			//构建一个来显示网页中的对话框
-			return true;
+			Log.e(TAG,"alert "+url+" message:"+message);
+			Map<String, Object> lMap = new HashMap<>();
+			lMap.put("code", 501);
+			lMap.put("message", ""+message);
+			lMap.put("content", ""+url);
+			post(lMap);
+			return super.onJsAlert(view,url,message,result);
 		}
 		
 		@Override
@@ -435,6 +450,7 @@ public class WebviewSetingUtils {
 	 * 402 webview 加载完成
 	 * 403 webview html中日志输出
 	 * 404 webview 加载出错
+	 * 501 webview 弹框回调
 	 * <p>
 	 * 1000 操作失败
 	 *
