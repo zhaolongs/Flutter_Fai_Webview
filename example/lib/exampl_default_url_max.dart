@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 
 /**
- *  满屏加载地址 
- *  在这里 使用weView 加载了一个 htmlUrl 是取常用的方法
+ *  加载地址
+ *  通过 url 加载了一个 Html页面 是取常用的方法
  */
 class DefaultLoadingWebViewUrlPage extends StatefulWidget {
   @override
@@ -14,10 +11,19 @@ class DefaultLoadingWebViewUrlPage extends StatefulWidget {
 }
 
 class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
+
+  //要显示的页面内容
+  Widget childWidget;
+  //加载Html的View
+  FaiWebViewWidget webViewWidget;
+  //原生 发送给 Flutter 的消息
+  String message = "--";
+  // 页面
+  String htmlUrl = "https://blog.csdn.net/zl18603543572";
+
   @override
   void initState() {
     super.initState();
-
     //使用插件 FaiWebViewWidget
     webViewWidget = FaiWebViewWidget(
       //webview 加载网页链接
@@ -28,15 +34,6 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
       isLog: true,
     );
   }
-
-  //要显示的页面内容
-  Widget childWidget;
-  //加载Html的View
-  FaiWebViewWidget webViewWidget;
-  //原生 发送给 Flutter 的消息
-  String message = "--";
-  // 页面
-  String htmlUrl = "https://blog.csdn.net/zl18603543572";
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +61,7 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
 
   }
 
-  callBack(int code, String msg, content) {
+  void callBack(int code, String msg, content) {
     //加载页面完成后 对页面重新测量的回调
     //这里没有使用到
     //当FaiWebViewWidget 被嵌套在可滑动的 widget 中，必须设置 FaiWebViewWidget 的高度

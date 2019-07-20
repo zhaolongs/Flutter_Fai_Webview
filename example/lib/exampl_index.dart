@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 
+import 'exampl_default_hex_refresh.dart';
 import 'exampl_default_html_data_max.dart';
 import 'exampl_default_html_data_max_refresh.dart';
 import 'exampl_default_html_data_max_refresh2.dart';
@@ -61,7 +62,7 @@ class IndexPageState extends State<IndexPage> {
                   );
                 },
                 child: Text(
-                  "全屏加载 url 下拉刷新 ",
+                  "常用方式 通过 url 加载一个 html 下拉刷新 ",
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.black,
@@ -142,6 +143,26 @@ class IndexPageState extends State<IndexPage> {
                 },
                 child: Text(
                   "全屏加载  标签内的富文本 ",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment(0, -1),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new DefaultHexRefreshPage()),
+                  );
+                },
+                child: Text(
+                  "混合页面加载  ",
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.black,

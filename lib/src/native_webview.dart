@@ -22,18 +22,62 @@ class FaiWebViewWidget extends StatefulWidget {
 
   bool htmlImageIsClick = false;
 
-  //回调
+  /**
+   * 向 Flutter 中发送消息
+   * code
+   * 201 测量webview 成功
+   * 202 JS调用
+   * 203 图片点击回调
+   * 301 滑动到顶部
+   * 302 向下滑动
+   * 303	向上滑动
+   * 304 滑动到底部
+   * 401 webview 开始加载
+   * 402 webview 加载完成
+   * 403 webview html中日志输出
+   * 404 webview 加载出错
+   * 501 webview 弹框回调
+   * <p>
+   * 1000 操作失败
+   *
+   * @param map
+   */
+
+  /**
+   * code 原生 Android iOS 回调 Flutter 的消息类型标识
+   * message 消息类型日志
+   * content 回调的基本数据
+   */
   Function(int code, String message, dynamic content) callback;
+
+  /**
+   * 图片点击回调
+   * code :203 图片点击回调
+   * // url 当前点击图片的链接 index 当前点击Html页面中所有图片中的角标 urls 所有图片的集合
+   * content: {"url":"http://pic.studyyoun.com/1543767087584","index":0,"urls":"http://pic.studyyoun.com/1543767087584,http://pic.studyyoun.com/1543767100547"}
+   *
+   */
   Function(int index, String url, List<String> images) imageCallBack;
 
-  FaiWebViewWidget(
-      {this.callback,
-      this.url,
-      this.htmlData,
-      this.htmlBlockData,
-      this.isLog,
-      this.htmlImageIsClick = false,
-      this.imageCallBack});
+  FaiWebViewWidget({
+    //webview 加载网页链接
+    this.url,
+    //webview 加载 完整的 html 文件数据  如 <html> .... </html>
+    // 不完整的 html 文件数据 如 <p></p> 配置到此项，用此属性来加载，只会渲染 <p> ... </p> 中已有的样式 不会适配移动端显示
+    this.htmlData,
+    //webview 加载完整的 html 文件数据 或者是 不完整的 html 文件数据 如 <p></p>
+    //不完整的 html 文件数据 如 <p></p> 配置到此项，会自动将不完整的 html 文件数据 添加 <html><head> .. </head> <body> 原来的内容 </body></html>,并适配移动端
+    this.htmlBlockData,
+    //输出 Log 日志功能
+    this.isLog,
+    // 为 Html 页面中所有的图片添加 点击事件 并通过回调 通知 Flutter 页面
+    // 只有使用 htmlBlockData 属性加载的页面才会有此效果
+    this.htmlImageIsClick = false,
+    // Html 页面中图片点击回调
+    this.imageCallBack,
+    // Html 页面中所有的消息回调
+    this.callback,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -117,7 +161,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
           this.url = htmlUrl;
         }
         refresh();
-      }else if(code==101){
+      } else if (code == 101) {
         String string = event["string"];
         loadJsMethod(string);
       }
