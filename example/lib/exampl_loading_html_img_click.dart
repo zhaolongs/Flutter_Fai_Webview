@@ -37,6 +37,7 @@ class DefaultHtmlBlockDataPageState
   }
 
   FaiWebViewWidget webViewWidget;
+
   //原生 发送给 Flutter 的消息
   String message = "--";
   double webViewHeight = 100;
@@ -44,7 +45,7 @@ class DefaultHtmlBlockDataPageState
   //要显示的页面内容
   Widget childWidget;
   String htmlBlockData =
-      "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p><br/></p><p>生物真题&nbsp;</p><p><img src=\"http://pic.studyyoun.com/1543767087584\" title=\"\" alt=\"\"/></p><p><img src=\"http://pic.studyyoun.com/1543767100547\" title=\"\" alt=\"\"/></p><p><br/></p><p><br/></p><p><br/></p></body></html>";
+      "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p><br/></p><p>生物真题&nbsp;</p><p><img src=\"http://pic.studyyoun.com/1543767087584\" title=\"\" alt=\"\"/></p><p><img src=\"http://pic.studyyoun.com/1543767100547\" title=\"\" alt=\"\"/></p><p><br/></p><p><br/></p><p><br/></p> <script > function testAlert(){ console.log(\"console.log\"); alert(\"alert\")} </script> </body></html>";
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +80,14 @@ class DefaultHtmlBlockDataPageState
                   child: Image.network(imageUrl),
                 )
               : Container(),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(onPressed: () {
+              webViewWidget.loadJsMethod("testAlert()");
+              print("调用js 方法");
+            },child: Text("JS",style: TextStyle(color: Colors.white),),),
+          )
         ],
       ),
     );
@@ -86,7 +95,7 @@ class DefaultHtmlBlockDataPageState
 
   String imageUrl = null;
 
-  imageCallBack(int code, String url, content) {
+  imageCallBack(int code, String url, List<String> images) {
     imageUrl = url;
     setState(() {});
   }

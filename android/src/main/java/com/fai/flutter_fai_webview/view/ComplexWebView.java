@@ -101,6 +101,25 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 				mWebView.reload();
 			}
 			
+		}else if (lMethod.equals("jsload")) {
+			Map<String, String> params = (Map<String, String>) methodCall.arguments;
+			//加载页面
+			
+			String jsMethod = null;
+			
+			if (params != null) {
+				if (params.containsKey("string")) {
+					//通过 url 来加载页面
+					jsMethod = (String) params.get("string");
+					if (jsMethod != null) {
+						//加载 JS方法
+						mWebviewSetingUtils.loadJsMethod(jsMethod);
+					}
+					
+				}
+				
+			}
+			
 		}
 		
 	}
@@ -207,4 +226,6 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 		
 		return body;
 	}
+	
+	
 }
