@@ -56,11 +56,12 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
             ),
           ),
         ),
-        body: webViewWidget,
+        body: Container(height: mWebViewHeight,child: webViewWidget,),
       );
 
   }
 
+  double mWebViewHeight=100;
   void callBack(int code, String msg, content) {
     //加载页面完成后 对页面重新测量的回调
     //这里没有使用到
@@ -68,7 +69,8 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
     //设置 FaiWebViewWidget 的高度 可通过在 FaiWebViewWidget 嵌套一层 Container 或者 SizeBox
     if (code == 201) {
       //页面加载完成后 测量的 WebView 高度
-      int webViewHeight = content;
+      double webViewHeight = content;
+      mWebViewHeight = webViewHeight;
       print("webViewHeight " + webViewHeight.toString());
     } else {
       //其他回调
