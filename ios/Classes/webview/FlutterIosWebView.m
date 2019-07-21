@@ -79,7 +79,7 @@
             if(array.count==2){
                 htmlDataBlock=[NSString stringWithFormat:@"%@ %@  %@ %@ ",array[0],@"<meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" > ",@" <style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:99%;height:auto;}</style>  </head> ",array[1]];
             }else{
-                htmlDataBlock=[NSString stringWithFormat:@"<html><head> <meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" >  <style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width: 99% ;height:auto;}</style> <body> %@  </body></html>",htmlDataBlock];
+                htmlDataBlock=[NSString stringWithFormat:@"<html><head> <meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" >  <style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:99%%;height:auto;}</style> <body> %@ </body></html>",htmlDataBlock];
             }
              if (htmlImageIsClick) {
                  //htmlDataBlock =[self htmlCotentSupportImagePreview:htmlDataBlock];
@@ -147,7 +147,7 @@
         NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
         [dict2 setObject:[NSNumber numberWithInt:201] forKey:@"code"];
         [dict2 setObject:@"测量成功V" forKey:@"message"];
-        [dict2 setObject:[NSNumber numberWithInt:height.toDouble] forKey:@"content"];
+        [dict2 setObject:[NSNumber numberWithDouble:height.toDouble] forKey:@"content"];
         
         [self messagePost:dict2];
     };

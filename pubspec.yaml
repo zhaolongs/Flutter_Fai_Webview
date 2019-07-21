@@ -1,7 +1,7 @@
 name: flutter_fai_webview
-description: A new Flutter plugin.
-version: 0.0.1
-author:
+description: Flutter 加载 Html 并实现 JS 双向交互插件
+version: 0.0.2
+author: zhaolong
 homepage:
 
 environment:

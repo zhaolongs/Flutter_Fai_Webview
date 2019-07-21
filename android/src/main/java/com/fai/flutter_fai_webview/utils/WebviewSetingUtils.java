@@ -165,7 +165,7 @@ public class WebviewSetingUtils {
 			final Map<String, Object> lMap = new HashMap<>();
 			lMap.put("code", 201);
 			lMap.put("message", "测量成功V");
-			lMap.put("content", height);
+			lMap.put("content", height*1.0);
 			
 			post(lMap);
 		}
