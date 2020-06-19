@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 
 /**
@@ -11,30 +12,18 @@ class DefaultHtmlBlockDataPage2 extends StatefulWidget {
 }
 
 class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
-
-
-  FaiWebViewWidget webViewWidget;
   //原生 发送给 Flutter 的消息
   String message = "--";
   double webViewHeight = 100;
 
   //要显示的页面内容
   Widget childWidget;
-  String htmlBlockData = "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p><br/></p><p>生物真题&nbsp;</p><p><img src=\"http://pic.studyyoun.com/1543767087584\" title=\"\" alt=\"\"/></p><p><img src=\"http://pic.studyyoun.com/1543767100547\" title=\"\" alt=\"\"/></p><p><br/></p><p><br/></p><p><br/></p></body></html>";
+  String htmlBlockData =
+      "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p>加载中</p></body></html>";
 
   @override
   void initState() {
     super.initState();
-
-    //使用插件 FaiWebViewWidget
-    webViewWidget = FaiWebViewWidget(
-      //webview 加载网页链接
-      htmlBlockData: htmlBlockData,
-      //webview 加载信息回调
-      callback: callBack,
-      //输出日志
-      isLog: true,
-    );
   }
 
   @override
@@ -58,7 +47,29 @@ class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
           ),
         ),
       ),
-      body: Container(child: webViewWidget,),
+      body: Container(
+        ///使用异步来加载
+        child: FutureBuilder<String>(
+          ///异步加载数据
+          future: loadingLocalAsset(),
+          ///构建
+          builder: (BuildContext context, var snap) {
+            String htmlData = snap.data;
+            //使用插件 FaiWebViewWidget
+            if (htmlData == null) {
+              return CircularProgressIndicator();
+            }
+            return FaiWebViewWidget(
+              //webview 加载本地html数据
+              htmlBlockData: htmlData,
+              //webview 加载信息回调
+              callback: callBack,
+              //输出日志
+              isLog: true,
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -76,5 +87,11 @@ class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
     setState(() {
       message = "回调：code[" + code.toString() + "]; msg[" + msg.toString() + "]";
     });
+  }
+
+  Future<String> loadingLocalAsset() async {
+    String htmlData = await rootBundle.loadString('assets/html/test.html');
+    print("加载数据完成 $htmlData");
+    return htmlData;
   }
 }

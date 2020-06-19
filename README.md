@@ -310,7 +310,12 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
 
 ```
 
-2.2 通过 Html Data 加载 Html 页面
+##### 2.2 加载本地资源目录assets下的html
+
+** 通过 Html Data 加载 Html 页面 ** 
+
+##### 2.2.1  加载模拟的html数据
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2019072015272538.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3psMTg2MDM1NDM1NzI=,size_16,color_FFFFFF,t_70)
 ```
 import 'package:flutter/material.dart';
@@ -335,7 +340,7 @@ class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
 
   //要显示的页面内容
   Widget childWidget;
-  String htmlBlockData = "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p><br/></p><p>生物真题&nbsp;</p><p><img src=\"http://pic.studyyoun.com/1543767087584\" title=\"\" alt=\"\"/></p><p><img src=\"http://pic.studyyoun.com/1543767100547\" title=\"\" alt=\"\"/></p><p><br/></p><p><br/></p><p><br/></p></body></html>";
+  String htmlBlockData = "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p><br/></p><p>生物真题&nbsp;</p><p><img src=\"https://images.gitee.com/uploads/images/2020/0602/203000_9fa3ddaa_568055.png\" title=\"\" alt=\"\"/></p><p><img src=\"https://images.gitee.com/uploads/images/2020/0602/203000_9fa3ddaa_568055.png\" title=\"\" alt=\"\"/></p><p><br/></p><p><br/></p><p><br/></p></body></html>";
 
   @override
   void initState() {
@@ -393,6 +398,120 @@ class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
     });
   }
 }
+
+```
+
+*** 
+##### 2.2.2 加载资源目录下assets的html数据
+
+第一步是配制资源目录下assets的html的依赖，在项目的pubspec.yaml中添加依赖
+
+```
+assets:
+  - assets/html/
+
+```
+第二步是加载对应的html静态文件然后渲染出来
+
+```
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_fai_webview/flutter_fai_webview.dart';
+
+/**
+ *  通过 htmlBlockData 加载 Html 数据 并添加移动适配
+ */
+class DefaultHtmlBlockDataPage2 extends StatefulWidget {
+  @override
+  DefaultHtmlBlockDataPageState createState() =>
+      DefaultHtmlBlockDataPageState();
+}
+
+class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
+  //原生 发送给 Flutter 的消息
+  String message = "--";
+  double webViewHeight = 100;
+
+  //要显示的页面内容
+  Widget childWidget;
+  String htmlBlockData =
+      "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p>加载中</p></body></html>";
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios),
+        ),
+        title: Container(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          height: 28,
+          alignment: Alignment(0, 0),
+          color: Color.fromARGB(90, 0, 0, 0),
+          child: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 12),
+          ),
+        ),
+      ),
+      body: Container(
+        ///使用异步来加载
+        child: FutureBuilder<String>(
+          ///异步加载数据
+          future: loadingLocalAsset(),
+          ///构建
+          builder: (BuildContext context, var snap) {
+            String htmlData = snap.data;
+            //使用插件 FaiWebViewWidget
+            if (htmlData == null) {
+              return CircularProgressIndicator();
+            }
+            return FaiWebViewWidget(
+              //webview 加载本地html数据
+              htmlBlockData: htmlData,
+              //webview 加载信息回调
+              callback: callBack,
+              //输出日志
+              isLog: true,
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  callBack(int code, String msg, content) {
+    //加载页面完成后 对页面重新测量的回调
+    //这里没有使用到
+    //当FaiWebViewWidget 被嵌套在可滑动的 widget 中，必须设置 FaiWebViewWidget 的高度
+    //设置 FaiWebViewWidget 的高度 可通过在 FaiWebViewWidget 嵌套一层 Container 或者 SizeBox
+    if (code == 201) {
+      webViewHeight = content;
+      print("webViewHeight " + webViewHeight.toString());
+    } else {
+      //其他回调
+    }
+    setState(() {
+      message = "回调：code[" + code.toString() + "]; msg[" + msg.toString() + "]";
+    });
+  }
+
+  Future<String> loadingLocalAsset() async {
+    String htmlData = await rootBundle.loadString('assets/html/test.html');
+    print("加载数据完成 $htmlData");
+    return htmlData;
+  }
+}
+
 
 ```
 
@@ -525,6 +644,7 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
 }
 
 ```
+
 
 
 
