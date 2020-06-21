@@ -1,12 +1,11 @@
 name: flutter_fai_webview
 description: Flutter 加载 Html 并实现 JS 双向交互插件
 version: 0.0.2
-author: zhaolong
-homepage:
+homepage: https://github.com/zhaolongs/Flutter_Fai_Webview.git
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
-
+  flutter: ">=1.12.0 <2.0.0"
 dependencies:
   flutter:
     sdk: flutter
@@ -25,9 +24,12 @@ flutter:
   # be modified. They are used by the tooling to maintain consistency when
   # adding or updating assets for this project.
   plugin:
-    androidPackage: com.fai.flutter_fai_webview
-    pluginClass: FlutterFaiWebviewPlugin
-
+    platforms:
+      android:
+        package: com.fai.flutter_fai_webview
+        pluginClass: FlutterFaiWebviewPlugin
+      ios:
+        pluginClass: FlutterFaiWebviewPlugin
   # To add assets to your plugin package, add an assets section, like this:
 #  assets:
 #    - assets/html/test.html

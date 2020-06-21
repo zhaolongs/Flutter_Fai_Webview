@@ -61,11 +61,20 @@
 #### 1 基本使用说明
 ##### 1.1 Flutter 项目中 pubspec.xml 文件中 配置插件
 
+git 方式引入
+
 ```dart
   flutter_fai_webview:
     git:
       url: https://github.com/zhaolongs/Flutter_Fai_Webview.git
       ref: master
+```
+
+pub 仓库方式引入[pub.flutter-io.cn](https://pub.flutter-io.cn/packages/flutter_fai_webview)
+
+```
+dependencies:
+  flutter_fai_webview: ^0.0.2
 ```
 
 ##### 1.2 在使用到 WebView 页面中 
