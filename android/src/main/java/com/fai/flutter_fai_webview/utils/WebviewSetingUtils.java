@@ -151,8 +151,16 @@ public class WebviewSetingUtils {
 		post(lMap);
 	}
 	
-	public void loadJsMethod(String jsMethod) {
-		mWebView.loadUrl("javascript:"+jsMethod);
+	public void loadJsMethod(final String jsMethod) {
+		mWebView.post(new Runnable() {
+			@Override
+			public void run() {
+				// 注意调用的JS方法名要对应上
+				// 调用javascript的callJS()方法
+				mWebView.loadUrl("javascript:"+jsMethod);
+			}
+		});
+	
 	}
 	
 	public class ReadFinishClass {

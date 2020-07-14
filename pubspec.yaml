@@ -1,6 +1,6 @@
 name: flutter_fai_webview
-description: Flutter 加载 Html 并实现 JS 双向交互插件
-version: 0.0.2
+description: Flutter 加载 Html 并实现 JS 双向交互插件，可通过url来加载网络HTML页面，也可通过String来加载本地资源目录下的静态HTML或者是接口请求回来的Html数据
+version: 1.0.0
 homepage: https://github.com/zhaolongs/Flutter_Fai_Webview.git
 
 environment:

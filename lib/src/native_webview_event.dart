@@ -1,15 +1,15 @@
 import 'dart:async';
 
-class NativeEventMessage{
+class NativeEventMessage {
   static NativeEventMessage _instance;
   //定义一个Controller
   StreamController _streamController;
-  factory  NativeEventMessage.getDefault(){
+  factory NativeEventMessage.getDefault() {
     return _instance ??= NativeEventMessage._init();
   }
 
   //初始化
-  NativeEventMessage._init(){
+  NativeEventMessage._init() {
     _streamController = StreamController.broadcast();
   }
 
@@ -21,8 +21,8 @@ class NativeEventMessage{
       return _streamController.stream.listen(onData);
     } else {
       ///筛选出 类型为 T 的数据,获得只包含T的Stream
-      Stream<T>stream = _streamController.stream.where((type) => type is T)
-          .cast<T>();
+      Stream<T> stream =
+          _streamController.stream.where((type) => type is T).cast<T>();
       return stream.listen(onData);
     }
   }
@@ -37,5 +37,4 @@ class NativeEventMessage{
     print("取消注册");
     _streamController.close();
   }
-
 }
