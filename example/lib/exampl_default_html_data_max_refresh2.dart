@@ -5,13 +5,13 @@ import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 /**
  *  通过 htmlBlockData 加载 Html 数据 并添加移动适配
  */
-class DefaultHtmlBlockDataPage2 extends StatefulWidget {
+class LoadingLocalStringPage extends StatefulWidget {
   @override
   DefaultHtmlBlockDataPageState createState() =>
       DefaultHtmlBlockDataPageState();
 }
 
-class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
+class DefaultHtmlBlockDataPageState extends State<LoadingLocalStringPage> {
   //原生 发送给 Flutter 的消息
   String message = "--";
   double webViewHeight = 100;
@@ -49,27 +49,34 @@ class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
       ),
       body: Container(
         ///使用异步来加载
-        child: FutureBuilder<String>(
-          ///异步加载数据
-          future: loadingLocalAsset(),
-          ///构建
-          builder: (BuildContext context, var snap) {
-            String htmlData = snap.data;
-            //使用插件 FaiWebViewWidget
-            if (htmlData == null) {
-              return CircularProgressIndicator();
-            }
-            return FaiWebViewWidget(
-              //webview 加载本地html数据
-              htmlBlockData: htmlData,
-              //webview 加载信息回调
-              callback: callBack,
-              //输出日志
-              isLog: true,
-            );
-          },
-        ),
+        child: buildFutureBuilder(),
       ),
+    );
+  }
+
+  ///异步加载静态资源目录下的Html
+  FutureBuilder<String> buildFutureBuilder() {
+    return FutureBuilder<String>(
+      ///异步加载数据
+      future: loadingLocalAsset(),
+      ///构建
+      builder: (BuildContext context, var snap) {
+        ///加载完成的html数据
+        String htmlData = snap.data;
+        //使用插件 FaiWebViewWidget
+        if (htmlData == null) {
+          return CircularProgressIndicator();
+        }
+        ///通过配置 htmlBlockData 来渲染
+        return FaiWebViewWidget(
+          //webview 加载本地html数据
+          htmlBlockData: htmlData,
+          //webview 加载信息回调
+          callback: callBack,
+          //输出日志
+          isLog: true,
+        );
+      },
     );
   }
 
@@ -89,7 +96,9 @@ class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage2> {
     });
   }
 
+  ///读取静态Html
   Future<String> loadingLocalAsset() async {
+    ///加载
     String htmlData = await rootBundle.loadString('assets/html/test.html');
     print("加载数据完成 $htmlData");
     return htmlData;

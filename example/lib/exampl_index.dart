@@ -98,7 +98,7 @@ class IndexPageState extends State<IndexPage> {
                   Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => new DefaultHtmlBlockDataPage2()),
+                        builder: (context) => new LoadingLocalStringPage()),
                   );
                 },
                 child: Text(
@@ -122,7 +122,7 @@ class IndexPageState extends State<IndexPage> {
                   );
                 },
                 child: Text(
-                  "全屏加载 html 标签 并适配设置图片可点击 ",
+                  "Html中的图片点击回调 ",
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.black,
