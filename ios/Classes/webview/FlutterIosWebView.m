@@ -51,7 +51,7 @@
     
 }
 
--(void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result{
+-(void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)results{
     if ([[call method] isEqualToString:@"load"]) {
         //获取参数
         NSDictionary *dict = call.arguments;
@@ -99,6 +99,22 @@
         NSString *jsMethod = dict[@"string"];
         if (_webView!=nil) {
             [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"javascript:%@",jsMethod]];
+        }
+    }else  if ([[call method] isEqualToString:@"goBack"]) {
+        if (_webView!=nil&&[_webView canGoBack]) {
+            [_webView goBack];
+        }
+    }else  if ([[call method] isEqualToString:@"goForward"]) {
+        if (_webView!=nil&&[_webView canGoForward]) {
+            [_webView goForward];
+        }
+    }else  if ([[call method] isEqualToString:@"canGoForward"]) {
+        if (_webView!=nil) {
+            results([NSString stringWithFormat:@"%@",[_webView canGoForward]?@"true":@"false"]);
+        }
+    }else  if ([[call method] isEqualToString:@"canGoBack"]) {
+        if (_webView!=nil) {
+            results([NSString stringWithFormat:@"%@",[_webView canGoBack]?@"true":@"false"]);
         }
     }else{
         //其他方法的回调

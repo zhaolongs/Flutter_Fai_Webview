@@ -301,11 +301,20 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   }
 
   Future<bool> canGoBack() async {
-    return await _channel.invokeMethod('canGoBack');
+    if(Platform.isAndroid){
+      return await _channel.invokeMethod('canGoBack');
+    }else{
+      return await _channel.invokeMethod('canGoBack')=="false"?false:true;
+    }
   }
 
   Future<bool> canGoForward() async {
-    return await _channel.invokeMethod('canGoForward');
+    if(Platform.isAndroid){
+      return await _channel.invokeMethod('canGoForward');
+    }else{
+      return await _channel.invokeMethod('canGoForward')=="false"?false:true;
+    }
+
   }
 
   Widget buildAndroidWebView() {

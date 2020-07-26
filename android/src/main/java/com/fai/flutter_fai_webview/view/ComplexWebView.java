@@ -112,7 +112,6 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 			if (mWebView != null) {
 				mWebView.reload();
 			}
-			
 		} else if (lMethod.equals("jsload")) {
 			Map<String, String> params = (Map<String, String>) methodCall.arguments;
 			//加载页面

@@ -68,6 +68,18 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
                       _faiWebViewController.forword();
                     } else {}
                   },
+                ),
+                SizedBox(
+                  width: 44,
+                ),
+                FloatingActionButton(
+                  heroTag: "se",
+                  child: Icon(Icons.refresh),
+                  onPressed: () async {
+                    ///刷新当前
+                    _faiWebViewController.refresh();
+
+                  },
                 )
               ],
             ),
