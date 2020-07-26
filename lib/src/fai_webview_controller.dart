@@ -13,11 +13,12 @@ import 'package:flutter/material.dart';
 ///按钮状态监听
 typedef FaiWebViewListener = void Function(
     int type, Map<String, dynamic> event);
-
+typedef FaiWebViewBackListener = Future<bool> Function(
+    int type, Map<String, dynamic> event);
 ///控制器
 class FaiWebViewController {
   FaiWebViewListener _flashAnimationListener;
-
+  FaiWebViewBackListener _faiWebViewBackListener;
   ///Flutter调用Html中的Js方法
   ///[parameterMap]为参数内容
   ///[jsMethodName]为调用JS方法的名称
@@ -39,6 +40,9 @@ class FaiWebViewController {
     _flashAnimationListener = listener;
   }
 
+  void setBackListener(FaiWebViewBackListener listener){
+    _faiWebViewBackListener =listener;
+  }
   ///刷新页面的方法
   void refresh({String htmlData, String htmlBlockData, String htmlUrl}) {
     if (_flashAnimationListener != null) {
@@ -54,6 +58,34 @@ class FaiWebViewController {
       }
 
       _flashAnimationListener(1, map);
+    }
+  }
+
+  ///返回历史页面
+  void back(){
+    if (_flashAnimationListener != null) {
+      _flashAnimationListener(3, null);
+    }
+  }
+  ///向前
+  void forword(){
+    if (_flashAnimationListener != null) {
+      _flashAnimationListener(4, null);
+    }
+  }
+  Future<bool> canBack() async{
+    if (_faiWebViewBackListener != null) {
+     return await _faiWebViewBackListener(1, null);
+    }else{
+      return Future.value(false);
+    }
+  }
+
+  Future<bool> canForword() async{
+    if (_faiWebViewBackListener != null) {
+      return await _faiWebViewBackListener(2, null);
+    }else{
+      return Future.value(false);
     }
   }
 }

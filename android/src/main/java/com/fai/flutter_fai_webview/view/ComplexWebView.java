@@ -59,7 +59,7 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 		//初始化设置
 		mWebviewSetingUtils = new WebviewSetingUtils();
 		//通用设置
-		mWebviewSetingUtils.initSetting(context, this.mWebView, mIsLog,mHtmlImageIsClick);
+		mWebviewSetingUtils.initSetting(context, this.mWebView, mIsLog, mHtmlImageIsClick);
 		//注册消息监听
 		MethodChannel methodChannel = new MethodChannel(messenger, "com.flutter_to_native_webview_" + id);
 		methodChannel.setMethodCallHandler(this);
@@ -95,13 +95,25 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 		 */
 		if (lMethod.equals("load")) {
 			initLoadHtml(methodCall);
+		} else if (lMethod.equals("goBack")) {
+			if (mWebView.canGoBack()) {
+				mWebView.goBack();
+			}
+		} else if (lMethod.equals("goForward")) {
+			if (mWebView.canGoForward()) {
+				mWebView.goForward();
+			}
+		} else if (lMethod.equals("canGoForward")) {
+			result.success(mWebView.canGoForward());
+		} else if (lMethod.equals("canGoBack")) {
+			result.success(mWebView.canGoBack());
 		} else if (lMethod.equals("reload")) {
 			//刷新webview
 			if (mWebView != null) {
 				mWebView.reload();
 			}
 			
-		}else if (lMethod.equals("jsload")) {
+		} else if (lMethod.equals("jsload")) {
 			Map<String, String> params = (Map<String, String>) methodCall.arguments;
 			//加载页面
 			

@@ -60,6 +60,7 @@ class FaiWebViewWidget extends StatefulWidget {
 
   ///操作webView的控制器
   final FaiWebViewController controller;
+
   FaiWebViewWidget({
     //webview 加载网页链接
     this.url,
@@ -189,6 +190,22 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
 
           ///Flutter调用 Html中的Js方法
           loadJsMethod("$jsMethodName('${json.encode(event)}')");
+        } else if (type == 3) {
+          ///返回历史
+          goBack();
+        } else if (type == 4) {
+          ///返回历史
+          goForward();
+        }
+      });
+
+      widget.controller.setBackListener((int type, Map<String, dynamic> event) {
+        if (type == 1) {
+          return canGoBack();
+        } else if (type == 2) {
+          return canGoForward();
+        } else {
+          return Future.value(false);
         }
       });
     }
@@ -273,6 +290,22 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
 
   void reLoad() async {
     _channel.invokeMethod('reload');
+  }
+
+  void goBack() {
+    _channel.invokeMethod('goBack');
+  }
+
+  void goForward() {
+    _channel.invokeMethod('goForward');
+  }
+
+  Future<bool> canGoBack() async {
+    return await _channel.invokeMethod('canGoBack');
+  }
+
+  Future<bool> canGoForward() async {
+    return await _channel.invokeMethod('canGoForward');
   }
 
   Widget buildAndroidWebView() {

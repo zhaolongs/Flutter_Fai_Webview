@@ -9,11 +9,9 @@ class DefaultLoadingWebViewUrlPage extends StatefulWidget {
 }
 
 class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
-  
   //加载Html的View
   //原生 发送给 Flutter 的消息
   String message = "--";
-
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +25,75 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
         ),
         title: buildTitleContainer(),
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: buildFaiWebViewWidget(),
+      body: Stack(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height,
+            child: buildFaiWebViewWidget(),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 20,
+            child: Row(
+              children: [
+                FloatingActionButton(
+                  heroTag: "q2",
+                  child: Icon(Icons.arrow_left),
+                  onPressed: () async {
+                    ///判断是否可退 如果可退
+                    bool back = await _faiWebViewController.canBack();
+                    print("是否可后退 $back");
+                    if (back) {
+                      /// 如果可退 后退浏览器的历史
+                      _faiWebViewController.back();
+                    } else {
+                      ///如果不可就退出当前页面
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+                SizedBox(
+                  width: 44,
+                ),
+                FloatingActionButton(
+                  heroTag: "q",
+                  child: Icon(Icons.arrow_right),
+                  onPressed: () async {
+                    ///判断是否可退 如果可退
+                    bool forword = await _faiWebViewController.canForword();
+                    print("是否可前进$forword");
+                    if (forword) {
+                      /// 如果可退 后退浏览器的历史
+                      _faiWebViewController.forword();
+                    } else {}
+                  },
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          ///判断是否可退 如果可退
+          bool back = await _faiWebViewController.canBack();
+          print("是否可后退 $back");
+          if (back) {
+            /// 如果可退 后退浏览器的历史
+            _faiWebViewController.back();
+          } else {
+            ///如果不可就退出当前页面
+            Navigator.of(context).pop();
+          }
+        },
+        child: Icon(Icons.backspace),
       ),
     );
   }
+
+  FaiWebViewController _faiWebViewController = new FaiWebViewController();
+
   ///消息头的widget
   Container buildTitleContainer() {
     return Container(
@@ -46,8 +107,10 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
       ),
     );
   }
+
   // 页面
   String htmlUrl = "https://blog.csdn.net/zl18603543572";
+
   ///通过url加载页面
   FaiWebViewWidget buildFaiWebViewWidget() {
     return FaiWebViewWidget(
@@ -57,10 +120,9 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
       callback: callBack,
       //输出日志
       isLog: true,
+      controller: _faiWebViewController,
     );
   }
-
-
 
   ///加载 Html 的回调
   ///[code]消息类型标识
