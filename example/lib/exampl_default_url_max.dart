@@ -60,13 +60,15 @@ class MaxUrlState extends State<DefaultLoadingWebViewUrlPage> {
                   heroTag: "q",
                   child: Icon(Icons.arrow_right),
                   onPressed: () async {
-                    ///判断是否可退 如果可退
+
+                    ///判断是否可前进
                     bool forword = await _faiWebViewController.canForword();
                     print("是否可前进$forword");
                     if (forword) {
                       /// 如果可退 后退浏览器的历史
                       _faiWebViewController.forword();
                     } else {}
+
                   },
                 ),
                 SizedBox(

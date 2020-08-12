@@ -208,7 +208,18 @@
             
         }
     };
-    
+
+            context[@"otherJsMethodCall"] = ^() {
+
+                NSArray *args = [JSContext currentArguments];
+                JSValue *url = args[0];
+                NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
+                [dict2 setObject:[NSNumber numberWithInt:202] forKey:@"code"];
+                [dict2 setObject:@"js 方法回调" forKey:@"message"];
+                [dict2 setObject:url.toString forKey:@"content"];
+                 [self messagePost:dict2];
+
+            };
     context[@"console"][@"log"] = ^(JSValue * msg) {
         NSLog(@"H5  log : %@", msg);
     };

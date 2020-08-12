@@ -74,7 +74,8 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
                     faiWebViewController.toJsFunction(
                         jsMethodName: "testAlert2", parameterMap: map);
                   },
-                )
+                ),
+                Text("$jsToFlutter",style: TextStyle(color: Colors.grey),maxLines: 1,overflow: TextOverflow.clip,)
               ],
             ),
           )
@@ -82,6 +83,8 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
       ),
     );
   }
+
+  String jsToFlutter ="";
 
   ///异步加载静态资源目录下的Html
   FutureBuilder<String> buildFutureBuilder() {
@@ -131,6 +134,11 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
       String name = map["name"];
       int age = map["age"];
       print('这里是Js调用到Flutter中的数据 name $name  age $age');
+
+      setState(() {
+
+        jsToFlutter = "name $name  age $age";
+      });
     } else {
       //其他回调
     }
