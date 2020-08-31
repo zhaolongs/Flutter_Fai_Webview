@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 
-/**
- *  通过 htmlBlockData 加载 Html 数据 并添加移动适配
- */
+///  通过 htmlBlockData 加载 Html 数据 并添加移动适配
 class LoadingLocalStringPage extends StatefulWidget {
   @override
   DefaultHtmlBlockDataPageState createState() =>
@@ -20,6 +18,31 @@ class DefaultHtmlBlockDataPageState extends State<LoadingLocalStringPage> {
   Widget childWidget;
   String htmlBlockData =
       "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p>加载中</p></body></html>";
+
+  String htmlDataw =
+      "<p><img src='https://zc-oss.zcrubber.com/upload/files/2020/08/13/微信图片1.jpg'></p >";
+  static String html = """
+<div>
+    <div style="display: flex;align-items: center;margin:0px 10px 6px 10px;">徒弟首次提现完成奖师傅 <div style="margin:0 6px;flex:1;height:1px;border-top:1px #ccc dotted;"></div>
+      <div style="color: #F3150B;font-weight: 600;">1元</div>
+    </div>
+    <div style="display: flex;align-items: center;margin:0px 10px 6px 10px;">徒弟第二次提现完成奖师傅 <div style="margin:0 6px;flex:1;height:1px;border-top:1px #ccc dotted;"></div>
+      <div style="color: #F3150B;font-weight: 600;">2元</div>
+    </div>
+    <div style="display: flex;align-items: center;margin:0px 10px 6px 10px;">徒弟第三次提现完成奖师傅 <div style="margin:0 6px;flex:1;height:1px;border-top:1px #ccc dotted;"></div>
+      <div style="color: #F3150B;font-weight: 600;">3元</div>
+    </div>
+    <div style="display: flex;align-items: center;margin:0px 10px 6px 10px;">徒弟第四次提现完成奖师傅 <div style="margin:0 6px;flex:1;height:1px;border-top:1px #ccc dotted;"></div>
+      <div style="color: #F3150B;font-weight: 600;">5元</div>
+    </div>
+    <div style="display: flex;align-items: center;margin:0px 10px 6px 10px;">徒弟提现满100一次性再奖师傅 <div style="margin:0 6px;flex:1;height:1px;border-top:1px #ccc dotted;"></div>
+      <div style="color: #F3150B;font-weight: 600;">8元</div>
+    </div>
+    <div style="display: flex;align-items: center;margin:0px 10px 6px 10px;">徒弟提现满500一次性再奖师傅 <div style="margin:0 6px;flex:1;height:1px;border-top:1px #ccc dotted;"></div>
+      <div style="color: #F3150B;font-weight: 600;">10元</div>
+      
+    </div>
+""";
 
   @override
   void initState() {
@@ -49,7 +72,15 @@ class DefaultHtmlBlockDataPageState extends State<LoadingLocalStringPage> {
       ),
       body: Container(
         ///使用异步来加载
-        child: buildFutureBuilder(),
+//        child: buildFutureBuilder(),
+        child: FaiWebViewWidget(
+          //webview 加载本地html数据
+          htmlBlockData: html,
+          //webview 加载信息回调
+          callback: callBack,
+          //输出日志
+          isLog: true,
+        ),
       ),
     );
   }
@@ -59,6 +90,7 @@ class DefaultHtmlBlockDataPageState extends State<LoadingLocalStringPage> {
     return FutureBuilder<String>(
       ///异步加载数据
       future: loadingLocalAsset(),
+
       ///构建
       builder: (BuildContext context, var snap) {
         ///加载完成的html数据
@@ -67,6 +99,7 @@ class DefaultHtmlBlockDataPageState extends State<LoadingLocalStringPage> {
         if (htmlData == null) {
           return CircularProgressIndicator();
         }
+
         ///通过配置 htmlBlockData 来渲染
         return FaiWebViewWidget(
           //webview 加载本地html数据
@@ -100,7 +133,10 @@ class DefaultHtmlBlockDataPageState extends State<LoadingLocalStringPage> {
   Future<String> loadingLocalAsset() async {
     ///加载
     String htmlData = await rootBundle.loadString('assets/html/test.html');
+
+    ///测试数据2
+    String htmlData2 = await rootBundle.loadString('assets/html/test3.html');
     print("加载数据完成 $htmlData");
-    return htmlData;
+    return htmlData2;
   }
 }

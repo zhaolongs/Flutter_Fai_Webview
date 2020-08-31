@@ -194,7 +194,8 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 				} else {
 					//ToastUtils.show("数据异常,请重新进入", mContext);
 					StringBuilder stringBuilder = new StringBuilder();
-					stringBuilder.append("<html><head>");
+					stringBuilder.append("<html lang=\"en\"><head>");
+					stringBuilder.append("<meta charset=\"UTF-8\">");
 					stringBuilder.append("<meta name=\"viewport\" content=\"width=divice-width,initial-scale=1.0\" >\n");
 					stringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/sample-css.css\"/> \n");
 					stringBuilder.append("<style>html{margin:0;padding:0;font-family: sans-serif;font-size:14px} body{margin:10px;padding:0} img{width:99%;height:auto;}</style>");

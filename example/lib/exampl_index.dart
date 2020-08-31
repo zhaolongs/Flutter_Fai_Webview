@@ -103,7 +103,7 @@ class IndexPageState extends State<IndexPage> {
                   );
                 },
                 child: Text(
-                  "全屏加载 html data 适配 ",
+                  "加载本地 Html , 有两种方式 一种是 assets 目录下的文件  一种是 Html 字条串 ",
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.black,
