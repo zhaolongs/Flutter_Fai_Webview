@@ -335,6 +335,8 @@ public class WebviewSetingUtils {
 				Log.e("webview ", "web view loading finish " + url);
 			}
 			
+			view.setVisibility(View.VISIBLE);
+			
 			Map<String, Object> lMap = new HashMap<>();
 			lMap.put("code", 402);
 			lMap.put("message", "webview 加载完成");
