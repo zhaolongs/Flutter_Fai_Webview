@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 
 ///  通过 htmlBlockData 加载 Html 数据 并添加移动适配
-class LoadingLocalStringPage extends StatefulWidget {
+class HtmlAssetStringPage extends StatefulWidget {
   @override
   DefaultHtmlBlockDataPageState createState() =>
       DefaultHtmlBlockDataPageState();
 }
 
-class DefaultHtmlBlockDataPageState extends State<LoadingLocalStringPage> {
+class DefaultHtmlBlockDataPageState extends State<HtmlAssetStringPage> {
   //原生 发送给 Flutter 的消息
   String message = "--";
   double webViewHeight = 100;

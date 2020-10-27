@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'exampl_default_url_max.dart';
 import 'exampl_index.dart';
 
 void main() => runApp(MyApp());

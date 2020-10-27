@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 
-/**
- *   混合页面加载
- *
- */
+///   混合页面加载
+///
 class DefaultHexRefreshPage extends StatefulWidget {
   @override
   MaxUrlHexRefreshState createState() => MaxUrlHexRefreshState();
 }
 
 class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
-  FaiWebViewWidget webViewWidget;
+
 
   //原生 发送给 Flutter 的消息
   String message = "--";
@@ -22,16 +20,6 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
   @override
   void initState() {
     super.initState();
-
-    //使用插件 FaiWebViewWidget
-    webViewWidget = FaiWebViewWidget(
-      //webview 加载网页链接
-      url: htmlUrl,
-      //webview 加载信息回调
-      callback: callBack,
-      //输出日志
-      isLog: true,
-    );
   }
 
   @override
@@ -59,11 +47,9 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
     );
   }
 
-  /**
-   * 需要注意的是
-   * RefreshIndicator 会覆盖 WebView 的滑动事件
-   * 所有关于 监听 WebView 的滑动监听将会失效
-   */
+  /// 需要注意的是
+  /// RefreshIndicator 会覆盖 WebView 的滑动事件
+  /// 所有关于 监听 WebView 的滑动监听将会失效
   Widget buildRefreshHexWidget() {
 
     return RefreshIndicator(
@@ -90,7 +76,14 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
             ),
             Container(
               height: webViewHeight,
-              child: webViewWidget,
+              child:  FaiWebViewWidget(
+                //webview 加载网页链接
+                url: htmlUrl,
+                //webview 加载信息回调
+                callback: callBack,
+                //输出日志
+                isLog: true,
+              ),
             )
           ],
         ),
@@ -101,7 +94,6 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
   Future<Null> _onRefresh() async {
     return await Future.delayed(Duration(seconds: 1), () {
       print('refresh');
-      webViewWidget.refresh();
     });
   }
 

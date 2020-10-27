@@ -10,9 +10,13 @@ import 'package:flutter/material.dart';
  * 可关注博客：https://blog.csdn.net/zl18603543572
  */
 
+
+
+///typedef关键字，用来声明一种类型，当一个函数类型分配给一个变量时，保留类型信息
 ///按钮状态监听
 typedef FaiWebViewListener = void Function(
     int type, Map<String, dynamic> event);
+
 typedef FaiWebViewBackListener = Future<bool> Function(
     int type, Map<String, dynamic> event);
 ///控制器
@@ -56,7 +60,6 @@ class FaiWebViewController {
       if (htmlData != null) {
         map["htmlData"] = htmlData;
       }
-
       _flashAnimationListener(1, map);
     }
   }

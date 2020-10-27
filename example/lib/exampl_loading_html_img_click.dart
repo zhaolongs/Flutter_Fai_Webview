@@ -4,11 +4,9 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 
-/**
- *  加载 Html 标签
- *  嵌入 适配移动端的 默认样式
- *  实现 覆盖 Html 页面中的所有的图片添加点击事件
- */
+///  加载 Html 标签
+///  嵌入 适配移动端的 默认样式
+///  实现 覆盖 Html 页面中的所有的图片添加点击事件
 class DefaultHtmlBlockImageClickPage extends StatefulWidget {
   @override
   DefaultHtmlBlockDataPageState createState() =>
@@ -17,26 +15,7 @@ class DefaultHtmlBlockImageClickPage extends StatefulWidget {
 
 class DefaultHtmlBlockDataPageState
     extends State<DefaultHtmlBlockImageClickPage> {
-  @override
-  void initState() {
-    super.initState();
 
-    //使用插件 FaiWebViewWidget
-    webViewWidget = FaiWebViewWidget(
-      //webview 加载网页链接
-      htmlBlockData: htmlBlockData,
-      //图片添加点击事件
-      htmlImageIsClick: true,
-      //webview 加载信息回调
-      callback: callBack,
-      //图片信息的回调
-      imageCallBack: imageCallBack,
-      //输出日志
-      isLog: true,
-    );
-  }
-
-  FaiWebViewWidget webViewWidget;
 
   //原生 发送给 Flutter 的消息
   String message = "--";
@@ -71,7 +50,18 @@ class DefaultHtmlBlockDataPageState
       body: Stack(
         children: <Widget>[
           Container(
-            child: webViewWidget,
+            child: FaiWebViewWidget(
+              //webview 加载网页链接
+              htmlBlockData: htmlBlockData,
+              //图片添加点击事件
+              htmlImageIsClick: true,
+              //webview 加载信息回调
+              callback: callBack,
+              //图片信息的回调
+              imageCallBack: imageCallBack,
+              //输出日志
+              isLog: true,
+            ),
           ),
           imageUrl != null
               ? Container(
@@ -86,7 +76,7 @@ class DefaultHtmlBlockDataPageState
                   right: 20,
                   child: FloatingActionButton(
                     onPressed: () {
-                      webViewWidget.loadJsMethod("testAlert()");
+
                       print("调用js 方法");
                     },
                     child: Text(

@@ -262,7 +262,7 @@ class DefaultMaxHtmlDataRefreshPageState extends State<DefaultMaxHtmlDataRefresh
   Future<Null> _onRefresh() async {
     return await Future.delayed(Duration(seconds: 1), () {
       print('refresh');
-      webViewWidget.refresh();
+
     });
   }
 }

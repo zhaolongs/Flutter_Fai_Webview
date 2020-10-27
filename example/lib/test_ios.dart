@@ -1,39 +1,34 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 
 /**
- *  加载地址 可下拉刷新
- *  通过 url 加载了一个 Html页面 是取常用的方法
+ * 创建人： Created by zhaolong
+ * 创建时间：Created by  on 2020/9/1.
+ *
+ * 可关注公众号：我的大前端生涯   获取最新技术分享
+ * 可关注网易云课堂：https://study.163.com/instructor/1021406098.htm
+ * 可关注博客：https://blog.csdn.net/zl18603543572
  */
-class DefaultMaxUrlRefreshPage extends StatefulWidget {
+
+import 'package:flutter_fai_webview/flutter_fai_webview.dart';
+void main() => runApp(MaterialApp(
+      home: DefaultUrlPage(),
+    ));
+
+class DefaultUrlPage extends StatefulWidget {
   @override
   MaxUrlRefreshState createState() => MaxUrlRefreshState();
 }
 
-class MaxUrlRefreshState extends State<DefaultMaxUrlRefreshPage> {
+class MaxUrlRefreshState extends State<DefaultUrlPage> {
 
-
-  FaiWebViewWidget webViewWidget;
-  //原生 发送给 Flutter 的消息
-  String message = "--";
-  String htmlUrl = "https://blog.csdn.net/zl18603543572";
+  String message = 'message';
 
   @override
   void initState() {
     super.initState();
 
-    //使用插件 FaiWebViewWidget
-    webViewWidget = FaiWebViewWidget(
-      //webview 加载网页链接
-      url: htmlUrl,
-      //webview 加载信息回调
-      callback: callBack,
-      //输出日志
-      isLog: true,
-    );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,19 +55,23 @@ class MaxUrlRefreshState extends State<DefaultMaxUrlRefreshPage> {
     );
   }
 
+  FaiWebViewController _faiWebViewController = new FaiWebViewController();
   Widget buildRefreshHexWidget() {
     return RefreshIndicator(
-      //下拉刷新触发方法
       onRefresh: _onRefresh,
-      //设置webViewWidget
-      child: webViewWidget,
+      child:   FaiWebViewWidget(
+        url: 'https://www.8jieke.com/',
+        callback: callBack,
+        controller: _faiWebViewController,
+        isLog: false,
+      ),
     );
   }
 
   Future<Null> _onRefresh() async {
     return await Future.delayed(Duration(seconds: 1), () {
       print('refresh');
-      webViewWidget.refresh();
+      _faiWebViewController.refresh();
     });
   }
 
