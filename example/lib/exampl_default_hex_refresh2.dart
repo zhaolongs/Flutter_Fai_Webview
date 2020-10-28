@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 ///   混合页面加载
@@ -14,14 +12,17 @@ class DefaultHexRefreshPage2 extends StatefulWidget {
 }
 
 class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage2> {
-  //原生 发送给 Flutter 的消息
-  String message = "--";
+
   String htmlUrl = "https://blog.csdn.net/zl18603543572";
 
+  //原生 发送给 Flutter 的消息
+  String message = "--";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      ///标题
       appBar: buildAppBar(context),
+      ///页面主体
       body: buildFaiWebViewWidget(),
     );
   }
@@ -52,6 +53,7 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage2> {
   Container buildFaiWebViewWidget() {
     return Container(
       child: FaiWebViewWidget(
+        ///下拉刷新
         onRefresh: _onRefresh,
         //头
         headerWidget: buildHeaderWidget(),
