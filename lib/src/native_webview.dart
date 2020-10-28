@@ -197,7 +197,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   Column buildColumn() {
     return Column(
       children: <Widget>[
-        widget.headerWidget,
+        widget.headerWidget??Container(),
         buildContainer(),
       ],
     );
