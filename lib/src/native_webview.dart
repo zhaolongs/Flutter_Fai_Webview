@@ -221,7 +221,6 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     );
   }
 
-
   ScrollPhysics _scrollPhysics = ClampingScrollPhysics();
 
   callBack(int code, String msg, content) {
@@ -238,10 +237,14 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       //更新高度
       setState(() {});
       print("webViewHeight " + content.toString());
-    } else if (code == 301) {
+    } else if (code == 301 && widget.headerWidget != null) {
       //其他回调
       _scrollPhysics = ClampingScrollPhysics();
       setState(() {});
+    }
+
+    if (widget.callback != null) {
+      widget.callback(code, msg, content);
     }
   }
 }
