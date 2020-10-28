@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_fai_webview_example/exampl_html_string_page.dart';
 import 'exampl_default_hex_refresh.dart';
-import 'exampl_default_html_data_max_refresh.dart';
+import 'exampl_default_hex_refresh2.dart';
 import 'exampl_html_asset_string.dart';
 import 'exampl_html_url_page.dart';
 import 'exampl_js_click_flutter.dart';
@@ -100,7 +100,27 @@ class IndexPageState extends State<IndexPage> {
                   );
                 },
                 child: Text(
-                  "混合页面加载  ",
+                  " 低版本混合页面加载  ",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment(0, -1),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new DefaultHexRefreshPage2()),
+                  );
+                },
+                child: Text(
+                  " 1.1.4 版本以上混合页面加载  ",
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.black,
@@ -134,25 +154,24 @@ class IndexPageState extends State<IndexPage> {
 
   Align buildHtmlUrlButtonAlign(BuildContext context) {
     return Align(
-          alignment: Alignment(0, -1),
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: FlatButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) =>
-                          new ExamplHtmlUrlPage()),
-                );
-              },
-              child: Text(
-                "常用方式 通过 url 加载一个 html ",
-                style: TextStyle(color: Colors.white),
-              ),
-              color: Colors.black,
-            ),
+      alignment: Alignment(0, -1),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: FlatButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => new ExamplHtmlUrlPage()),
+            );
+          },
+          child: Text(
+            "常用方式 通过 url 加载一个 html ",
+            style: TextStyle(color: Colors.white),
           ),
-        );
+          color: Colors.black,
+        ),
+      ),
+    );
   }
 }
