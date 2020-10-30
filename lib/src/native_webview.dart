@@ -91,8 +91,14 @@ class FaiWebViewWidget extends StatefulWidget {
       this.headerWidget,
       this.onRefresh,
       this.appBar,
+      this.showLoading = true,
+      this.loadginWidget,
       Key key})
       : super(key: key);
+
+  final bool showLoading;
+
+  final Widget loadginWidget;
 
   @override
   State<StatefulWidget> createState() {
@@ -101,7 +107,7 @@ class FaiWebViewWidget extends StatefulWidget {
 }
 
 class AndroidWebViewState extends State<FaiWebViewWidget> {
-  double webViewHeight = 1;
+  double webViewHeight = 40;
 
   ///滑动布局控制器
   ScrollController _scrollController = new ScrollController();
@@ -185,7 +191,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
         print("滚动停止");
         double offset = _scrollController.offset;
         if (offset == _scrollController.position.maxScrollExtent) {
-          print("滚动停止  _scrollPhysics" );
+          print("滚动停止  _scrollPhysics");
           _scrollPhysics = NeverScrollableScrollPhysics();
           setState(() {});
         }
@@ -211,8 +217,25 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   Container buildContainer() {
     return Container(
       height: webViewHeight,
-      child: buildFaiWebViewItemWidget(),
+      child: Stack(
+        children: [
+          buildFaiWebViewItemWidget(),
+          buildLoadingWidget(),
+        ],
+      ),
     );
+  }
+
+  Widget buildLoadingWidget() {
+    if (widget.showLoading&&!isHideLoading) {
+      if (widget.loadginWidget == null) {
+        return Center(child: Text("加载中..."),);
+      } else {
+        return widget.loadginWidget;
+      }
+    } else {
+      return Container();
+    }
   }
 
   FaiWebViewItemWidget buildFaiWebViewItemWidget() {
@@ -231,13 +254,16 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   }
 
   ScrollPhysics _scrollPhysics = ClampingScrollPhysics();
+
   ///是否需要滑动兼容处理
   bool isScrollHex = false;
+
+  bool isHideLoading = false;
 
   callBack(int code, String msg, content) {
     //加载页面完成后 对页面重新测量的回调
     if (code == 201) {
-      double widgetPerentHeight = MediaQuery.of(context).size.height *3;
+      double widgetPerentHeight = MediaQuery.of(context).size.height * 3;
       findCurrentDy();
       double flagHeight = widgetPerentHeight - _dy;
       if (content <= widgetPerentHeight) {
@@ -247,11 +273,12 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
         webViewHeight = widgetPerentHeight;
         isScrollHex = true;
       }
+      isHideLoading = true;
       //更新高度
       setState(() {});
       print("webViewHeight " + content.toString());
     } else if (code == 301 && widget.headerWidget != null) {
-      print("_scrollPhysics 更新" );
+      print("_scrollPhysics 更新");
       //其他回调
       _scrollPhysics = ClampingScrollPhysics();
       setState(() {});
