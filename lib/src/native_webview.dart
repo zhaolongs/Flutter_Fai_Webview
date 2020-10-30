@@ -185,6 +185,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
         print("滚动停止");
         double offset = _scrollController.offset;
         if (offset == _scrollController.position.maxScrollExtent) {
+          print("滚动停止  _scrollPhysics" );
           _scrollPhysics = NeverScrollableScrollPhysics();
           setState(() {});
         }
@@ -194,55 +195,67 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     }
   }
 
-  Column buildColumn() {
-    return Column(
-      children: <Widget>[
-        widget.headerWidget??Container(),
-        buildContainer(),
-      ],
-    );
+  Widget buildColumn() {
+    if (widget.headerWidget == null) {
+      return buildContainer();
+    } else {
+      return Column(
+        children: <Widget>[
+          widget.headerWidget,
+          buildContainer(),
+        ],
+      );
+    }
   }
 
   Container buildContainer() {
     return Container(
       height: webViewHeight,
-      child: FaiWebViewItemWidget(
-        //webview 加载网页链接
-        url: widget.url,
-        htmlData: widget.htmlData,
-        htmlBlockData: widget.htmlBlockData,
-        htmlImageIsClick: widget.htmlImageIsClick,
-        //webview 加载信息回调
-        callback: callBack,
-        //输出日志
-        isLog: widget.isLog,
-        controller: widget.controller,
-      ),
+      child: buildFaiWebViewItemWidget(),
+    );
+  }
+
+  FaiWebViewItemWidget buildFaiWebViewItemWidget() {
+    return FaiWebViewItemWidget(
+      //webview 加载网页链接
+      url: widget.url,
+      htmlData: widget.htmlData,
+      htmlBlockData: widget.htmlBlockData,
+      htmlImageIsClick: widget.htmlImageIsClick,
+      //webview 加载信息回调
+      callback: callBack,
+      //输出日志
+      isLog: widget.isLog,
+      controller: widget.controller,
     );
   }
 
   ScrollPhysics _scrollPhysics = ClampingScrollPhysics();
+  ///是否需要滑动兼容处理
+  bool isScrollHex = false;
 
   callBack(int code, String msg, content) {
     //加载页面完成后 对页面重新测量的回调
     if (code == 201) {
-      double widgetPerentHeight = MediaQuery.of(context).size.height;
+      double widgetPerentHeight = MediaQuery.of(context).size.height *3;
       findCurrentDy();
       double flagHeight = widgetPerentHeight - _dy;
-      if (content <= flagHeight) {
+      if (content <= widgetPerentHeight) {
         webViewHeight = content;
+        isScrollHex = false;
       } else {
-        webViewHeight = flagHeight;
+        webViewHeight = widgetPerentHeight;
+        isScrollHex = true;
       }
       //更新高度
       setState(() {});
       print("webViewHeight " + content.toString());
     } else if (code == 301 && widget.headerWidget != null) {
+      print("_scrollPhysics 更新" );
       //其他回调
       _scrollPhysics = ClampingScrollPhysics();
       setState(() {});
     }
-
     if (widget.callback != null) {
       widget.callback(code, msg, content);
     }

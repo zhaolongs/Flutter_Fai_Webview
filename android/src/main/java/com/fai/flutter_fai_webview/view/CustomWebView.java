@@ -2,6 +2,7 @@ package com.fai.flutter_fai_webview.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.webkit.WebView;
 
 public class CustomWebView extends WebView {
@@ -48,6 +49,7 @@ public class CustomWebView extends WebView {
 	protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
 		super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
 		if (!isScrollBottom&&clampedY &&  scrollY !=0) {
+			Log.d("fai_webview","onOverScrolled回调");
 			//处于底部
 			if (mOnScrollChangeListener != null) {
 				mOnScrollChangeListener.onPageEnd(scrollX,scrollY,scrollX,scrollY);
