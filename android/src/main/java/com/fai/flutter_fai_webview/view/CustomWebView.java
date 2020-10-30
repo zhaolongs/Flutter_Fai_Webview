@@ -16,7 +16,7 @@ public class CustomWebView extends WebView {
 	public CustomWebView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 	}
-	
+	private boolean isScrollBottom = false;
 	private OnCustomChangeListener mOnScrollChangeListener;
 	@Override
 	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
@@ -26,6 +26,7 @@ public class CustomWebView extends WebView {
 		//
 		float webNow = getHeight()+getScrollY();
 		if(Math.abs(webContent-webNow)<1){
+			isScrollBottom = true ;
 			//处于底部
 			if (mOnScrollChangeListener != null) {
 				mOnScrollChangeListener.onPageEnd(l,t,oldl,oldt);
@@ -39,6 +40,17 @@ public class CustomWebView extends WebView {
 			//中间
 			if (mOnScrollChangeListener != null) {
 				mOnScrollChangeListener.onScrollChange(l,t,oldl,oldt);
+			}
+		}
+	}
+	
+	@Override
+	protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+		super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+		if (!isScrollBottom&&clampedY &&  scrollY !=0) {
+			//处于底部
+			if (mOnScrollChangeListener != null) {
+				mOnScrollChangeListener.onPageEnd(scrollX,scrollY,scrollX,scrollY);
 			}
 		}
 	}
