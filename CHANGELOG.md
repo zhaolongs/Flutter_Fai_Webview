@@ -1,4 +1,32 @@
 
+## 1.1.6 
+
+* 新增 WebView 添加 脚视图的功能
+* 新增自定义webView高度的功能
+
+```
+Container buildFaiWebViewWidget() {
+  return Container(
+    child: FaiWebViewWidget(
+      ///下拉刷新
+      onRefresh: _onRefresh,
+      //头
+      headerWidget: buildHeaderWidget(),
+      //脚
+      footerWidget: buildHeaderWidget(),
+      //WebView的高度
+      //webViewHeight: 400,
+      //webview 加载网页链接
+      url: htmlUrl,
+      //webview 加载信息回调
+      callback: callBack,
+      //输出日志
+      isLog: false,
+    ),
+  );
+}
+
+```
 ## 1.1.5
 
  * 添加 加载中显示文案
@@ -32,3 +60,5 @@
 ## 0.0.1
 
 * TODO: Describe initial release.
+
+

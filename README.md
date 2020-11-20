@@ -1,26 +1,33 @@
-# flutter_fai_webview
 
-
-**题记**
-  ——  执剑天涯，从你的点滴积累开始，所及之处，必精益求精。
-  ***
-
+# Flutter 加载 Html Flutter与JS的双向调用
 Flutter是谷歌推出的最新的移动开发框架。
 
 
-[【x1】微信公众号的每日提醒  随时随记 每日积累 随心而过](https://mp.weixin.qq.com/mp/homepage?__biz=MzA4MjIzOTE2Mw==&hid=1&sn=432233d701e1e1a93d897073955bd472&scene=18)
+[【x1】微信公众号的每日提醒  随时随记 每日积累 随心而过](https://mp.weixin.qq.com/mp/homepage?__biz=MzA4MjIzOTE2Mw==&hid=1&sn=432233d701e1e1a93d897073955bd472&scene=18)  
 
 [【x2】各种系列的视频教程 免费开源  关注 你不会迷路](https://www.toutiao.com/c/user/token/MS4wLjABAAAAYMrKikomuQJ4d-cPaeBqtAK2cQY697Pv9xIyyDhtwIM/)
 
 [【x3】系列文章 百万 Demo 随时 复制粘贴 使用](https://biglead.blog.csdn.net/article/details/93532582)
 
 ***
+大家如果有问题可以随时关注公众号联系作者，沟通解决需求。
+
+>* 2020-11-20 更新 1.1.6 版本 
+>  * 新增 WebView 添加 脚视图的功能
+* 新增自定义webView高度的功能
+
+  
+>* 2020-10-30 更新 1.1.5版本 
+>  * 添加 加载中显示文案
+> * 兼容部分机型有底部虚拟菜单栏无法监听回调问题
+ > * 优化 ScrollView 与 WebView 的兼容显示
+
 * 2020-10-28 更新[1.1.4 版本 处理 Flutter与Html的混合页面加载](https://biglead.blog.csdn.net/article/details/109340398)
 
 * 2020-10-27 更新 [1.1.3 版本](https://pub.flutter-io.cn/packages/flutter_fai_webview/install) 优化处理在 Android平台加载显示短暂的黑屏问题
 
 * 2020-7-26 更新支持 Android iOS 平台向前或者是后退浏览历史功能
-请查看本文章第四小节
+请查看本文章第四小节 
 
 * 2020-8-12 修复在iphone8早JS调用Flutter失效问题[版本1.1.1](https://pub.flutter-io.cn/packages/flutter_fai_webview/install)
 ***
@@ -36,8 +43,8 @@ Flutter是谷歌推出的最新的移动开发框架。
 * 实现 WebView 加载完成后，自动测量 WebView 的高度，并回调 Flutter
 * 实现 WebView 加载完成监听
 * 实现 WebView 上下滑动、滑动到顶部兼听、滑动到底部兼听并回调 Flutter
-* 实现 兼听 WebView 输出日志并将日志回调 Flutter
-* 实现 为 Html 页面中所有的图片添加点击事件 并回调 Flutter
+* 实现 兼听 WebView 输出日志并将日志回调 Flutter 
+* 实现 为 Html 页面中所有的图片添加点击事件 并回调 Flutter 
 *  实现Html与Flutter的JS双向互调
 * 实现打开相机相册的功能
 * 实现回退历史浏览记录的功能
@@ -48,12 +55,12 @@ Flutter是谷歌推出的最新的移动开发框架。
 
 **Flutter中可用于来加载 Html 页面的插件 ,**
 
-* flutter_WebView_plugin
+* flutter_WebView_plugin 
 * webView_flutter
-* flutter_inappbrowser
-* html
-* flutter_html
-* flutter_html_view
+* flutter_inappbrowser 
+* html 
+* flutter_html 
+* flutter_html_view 
 
 这些多多少满足不了我项目中的需求，所以花了几天时间开发了 Flutter_Fai_Webview 插件，可实现   Android 中 WebView 或者 是 iOS 中的 UIWebView 中的功能，因为 Flutter_Fai_Webview 插件本质上是通过 PlatformView 功能将原生的 View 嵌套在 Flutter 中。
 
@@ -61,7 +68,7 @@ Flutter是谷歌推出的最新的移动开发框架。
 
 **开发插件要具备的知识：**
 
-* Flutter 与 原生 Android iOS 双向通信
+* Flutter 与 原生 Android iOS 双向通信 
  [Flutter通过MethodChannel实现Flutter 与Android iOS 的双向通信](https://blog.csdn.net/zl18603543572/article/details/96049359)
  [Flutter通过BasicMessageChannel实现Flutter 与Android iOS 的双向通信](https://blog.csdn.net/zl18603543572/article/details/96043692)
 * Flutter 中内嵌 Android iOS 原生View的编程基础
@@ -71,7 +78,7 @@ Flutter是谷歌推出的最新的移动开发框架。
 
 
 
-***
+*** 
 
 #### 开始使用
 
@@ -93,11 +100,11 @@ git方式依赖：
       ref: master
 ```
 
-##### 1.2 在使用到 WebView 页面中
+##### 1.2 在使用到 WebView 页面中 
 
 引入头文件
 
-```dart
+```dart 
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 ```
 
@@ -110,7 +117,7 @@ import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 然后使用FaiWebViewWidget来加载显示这个h5链接，代码如下：
 
 
-```java
+```java 
 
   ///通过url加载页面
   FaiWebViewWidget buildFaiWebViewWidget() {
@@ -153,7 +160,7 @@ import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200714211841289.gif)
 [完整代码在这里](https://github.com/zhaolongs/Flutter_Fai_Webview/blob/master/example/lib/exampl_default_url_max.dart)
 ##### 1.4 关于回调中的code取值说明如下
-
+  
 | code值 |  简述|
 |--|--|
 | 201 |测量webview 成功
@@ -260,8 +267,8 @@ import 'package:flutter_fai_webview/flutter_fai_webview.dart';
 ![公众号 我的大前端生涯](https://img-blog.csdnimg.cn/20200620175409480.gif)
 ***
 
- ####  2 Flutter 加载页面
-
+ ####  2 Flutter 加载页面 
+ 
 ##### 2.1  通过 url 加载 Html 页面
 在上述1.3 通过url加载网页已进行过描述
 
@@ -344,7 +351,7 @@ class DefaultHexRefreshPage extends StatefulWidget {
 }
 
 class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
-
+ 
 
   //原生 发送给 Flutter 的消息
   String message = "--";
@@ -383,12 +390,12 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
   }
 
   /**
-   * 需要注意的是
+   * 需要注意的是 
    * RefreshIndicator 会覆盖 WebView 的滑动事件
    * 所有关于 监听 WebView 的滑动监听将会失效
    */
   Widget buildRefreshHexWidget() {
-
+    
     return RefreshIndicator(
       //下拉刷新触发方法
       onRefresh: _onRefresh,
@@ -574,7 +581,7 @@ RaisedButton(
 ```java
   ///FaiWebViewWidget 的回调处理
   callBack(int code, String msg, content) {
-
+   
     if (code == 202) {
       /// json.encode(mapData); //Map转化JSON字符串
       /// json.decode(strData); //JSON 字符串转化为Map类型
@@ -595,7 +602,7 @@ RaisedButton(
 
 > 在正个过程中参数数据是通过json格式的数据来传递的，在实际项目开发中需要保持json的一至
 
-***
+*** 
 #### 4 Flutter操作Html的其他方法简述
 ##### 4.1 刷新页面加载
 通过 FaiWebViewController的 refresh方法就可实现，代码如下：
@@ -632,7 +639,7 @@ RaisedButton(
 ```
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200726173630806.gif)
 
-***
+*** 
 完结
 
 ![公众号 我的大前端生涯](https://img-blog.csdnimg.cn/20200620175409480.gif)
