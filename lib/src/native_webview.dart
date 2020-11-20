@@ -65,7 +65,9 @@ class FaiWebViewWidget extends StatefulWidget {
   final ScrollController scrollController;
 
   final Widget headerWidget;
+  final Widget footerWidget;
   final Widget appBar;
+  final double webViewHeight;
 
   FaiWebViewWidget(
       {
@@ -88,11 +90,18 @@ class FaiWebViewWidget extends StatefulWidget {
       this.callback,
       this.controller,
       this.scrollController,
+      //混合加载时 WebView 顶部的 Widget
       this.headerWidget,
       this.onRefresh,
       this.appBar,
+      //是否显示默认的加载中
       this.showLoading = true,
+      //自定义加载中 Widget
       this.loadginWidget,
+      //WebView 下面的 Widget
+      this.footerWidget,
+      //webView 的高度 如果指定了 会使用这里的值 如果未指定 会自动测量
+      this.webViewHeight,
       Key key})
       : super(key: key);
 
@@ -107,10 +116,17 @@ class FaiWebViewWidget extends StatefulWidget {
 }
 
 class AndroidWebViewState extends State<FaiWebViewWidget> {
-  double webViewHeight = 40;
-
+  double _webViewHeight;
+  double _defaultWebViewHeight = 40;
   ///滑动布局控制器
   ScrollController _scrollController = new ScrollController();
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _webViewHeight = widget.webViewHeight;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +206,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       case ScrollEndNotification:
         print("滚动停止");
         double offset = _scrollController.offset;
-        if (offset == _scrollController.position.maxScrollExtent) {
+        if (widget.footerWidget==null&&offset == _scrollController.position.maxScrollExtent) {
           print("滚动停止  _scrollPhysics");
           _scrollPhysics = NeverScrollableScrollPhysics();
           setState(() {});
@@ -202,13 +218,14 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   }
 
   Widget buildColumn() {
-    if (widget.headerWidget == null) {
+    if (widget.headerWidget == null && widget.footerWidget == null) {
       return buildContainer();
     } else {
       return Column(
         children: <Widget>[
-          widget.headerWidget,
+          widget.headerWidget==null?Container():widget.headerWidget,
           buildContainer(),
+          widget.footerWidget==null?Container():widget.footerWidget,
         ],
       );
     }
@@ -216,7 +233,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
 
   Container buildContainer() {
     return Container(
-      height: webViewHeight,
+      height: _webViewHeight==null?_defaultWebViewHeight:_webViewHeight,
       child: Stack(
         children: [
           buildFaiWebViewItemWidget(),
@@ -227,9 +244,11 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   }
 
   Widget buildLoadingWidget() {
-    if (widget.showLoading&&!isHideLoading) {
+    if (widget.showLoading && !isHideLoading) {
       if (widget.loadginWidget == null) {
-        return Center(child: Text("加载中..."),);
+        return Center(
+          child: Text("加载中..."),
+        );
       } else {
         return widget.loadginWidget;
       }
@@ -266,12 +285,14 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       double widgetPerentHeight = MediaQuery.of(context).size.height * 3;
       findCurrentDy();
       double flagHeight = widgetPerentHeight - _dy;
-      if (content <= widgetPerentHeight) {
-        webViewHeight = content;
-        isScrollHex = false;
-      } else {
-        webViewHeight = widgetPerentHeight;
-        isScrollHex = true;
+      if(_webViewHeight==null) {
+        if (content <= widgetPerentHeight) {
+          _webViewHeight = content;
+          isScrollHex = false;
+        } else {
+          _webViewHeight = widgetPerentHeight;
+          isScrollHex = true;
+        }
       }
       isHideLoading = true;
       //更新高度

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fai_webview_example/exampl_html_string_page.dart';
 import 'exampl_default_hex_refresh.dart';
 import 'exampl_default_hex_refresh2.dart';
+import 'exampl_default_hex_refresh3.dart';
 import 'exampl_html_asset_string.dart';
 import 'exampl_html_url_page.dart';
 import 'exampl_js_click_flutter.dart';
@@ -121,6 +122,26 @@ class IndexPageState extends State<IndexPage> {
                 },
                 child: Text(
                   " 1.1.4 版本以上混合页面加载  ",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment(0, -1),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new DefaultHexRefreshPage3()),
+                  );
+                },
+                child: Text(
+                  " 1.1.4 版本以上 Widget 中间使用 Widget 加载  ",
                   style: TextStyle(color: Colors.white),
                 ),
                 color: Colors.black,
