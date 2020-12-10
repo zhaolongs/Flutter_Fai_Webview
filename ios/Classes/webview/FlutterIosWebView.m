@@ -7,15 +7,16 @@
 //
 
 #import "FlutterIosWebView.h"
+#import <WebKit/WebKit.h>
 #import <JavaScriptCore/JavaScriptCore.h>
-@interface FlutterIosWebView() <UIWebViewDelegate,UIScrollViewDelegate>
+@interface FlutterIosWebView() <WKUIDelegate,UIScrollViewDelegate,WKNavigationDelegate>
 
 @end
 
 @implementation FlutterIosWebView{
     //FlutterIosTextLabel 创建后的标识
     int64_t _viewId;
-    UIWebView * _webView;
+    WKWebView * _webView;
     //消息回调
     FlutterMethodChannel* _channel;
     BOOL htmlImageIsClick;
@@ -27,15 +28,35 @@
         if (frame.size.width==0) {
             frame=CGRectMake(frame.origin.x, frame.origin.y, [UIScreen mainScreen].bounds.size.width, 22);
         }
-        _webView =[[UIWebView alloc] initWithFrame:frame];
-        _webView.delegate=self;
+        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+
+            config.preferences = [[WKPreferences alloc] init];
+
+            config.preferences.minimumFontSize = 10;
+
+            config.preferences.javaScriptEnabled = YES;
+
+            config.preferences.javaScriptCanOpenWindowsAutomatically = NO;
+
+            config.userContentController = [[WKUserContentController alloc] init];
+
+            config.processPool = [[WKProcessPool alloc] init];
+
+        _webView = [[WKWebView alloc] initWithFrame:frame configuration:config];
+    
+        // UI代理
+        _webView.UIDelegate = self;
+        // 导航代理
+        _webView.navigationDelegate = self;
+        // 是否允许手势左滑返回上一级, 类似导航控制的左滑返回
+        _webView.allowsBackForwardNavigationGestures = YES;
         _webView.scrollView.delegate = self;
         _viewId = viewId;
         
         //接收 初始化参数
         NSDictionary *dic = args;
         NSString *content = dic[@"content"];
-       htmlImageIsClick = dic[@"htmlImageIsClick"];
+        htmlImageIsClick = dic[@"htmlImageIsClick"];
         
         
         // 注册flutter 与 ios 通信通道
@@ -59,12 +80,23 @@
         NSString *htmlData = dict[@"htmlData"];
         NSString *htmlDataBlock = dict[@"htmlBlockData"];
         if (![url isKindOfClass:[NSNull class]]&& url!=nil) {
+            
+            //只需在webView的loadHTMLString:baseURL:方法执行之前或之后将webView的高度强行设置为0，
+            //此时webView貌似就放弃了那个倔强的缺省高度，而是按照真实的内容来返回了
+            CGRect frame = _webView.frame;
+               frame.size.height = 0;
+            _webView.frame = frame;
+            
+            
             NSURL *requestUrl = [NSURL URLWithString:url];
             NSURLRequest *request = [NSURLRequest requestWithURL:requestUrl];
             [_webView loadRequest:request];
         }else if(![htmlData isKindOfClass:[NSNull class]]&&htmlData!=nil){
             NSData *data =[htmlData dataUsingEncoding:NSUTF8StringEncoding];
-            [_webView loadData:data MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:nil];
+            
+          
+        [_webView loadData:data MIMEType:@"text/html" characterEncodingName:@"utf-8" baseURL:nil];
+            
             
         }else if(![htmlDataBlock isKindOfClass:[NSNull class]]&&htmlDataBlock!=nil){
             
@@ -85,7 +117,7 @@
                  //htmlDataBlock =[self htmlCotentSupportImagePreview:htmlDataBlock];
              }
             NSData *data =[htmlDataBlock dataUsingEncoding:NSUTF8StringEncoding];
-            [_webView loadData:data MIMEType:@"text/html" textEncodingName:@"utf-8" baseURL:nil];
+            [_webView loadData:data MIMEType:@"text/html" characterEncodingName:@"utf-8" baseURL:nil];
             
         }
         
@@ -98,7 +130,7 @@
         NSDictionary *dict = call.arguments;
         NSString *jsMethod = dict[@"string"];
         if (_webView!=nil) {
-            [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"javascript:%@",jsMethod]];
+           
         }
     }else  if ([[call method] isEqualToString:@"goBack"]) {
         if (_webView!=nil&&[_webView canGoBack]) {
@@ -121,29 +153,33 @@
     }
 }
 
+#pragma mark -- 实现WKNavigationDelegate委托协议
 
-- (nonnull UIView *)view {
-    return _webView;
-}
+//开始加载时调用
 
-//web view 代理相关
-// Sent before a web view begins loading a frame.请求发送前都会调用该方法,返回NO则不处理这个请求
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-
-    return YES;
-}
-// Sent after a web view starts loading a frame. 请求发送之后开始接收响应之前会调用这个方法
-- (void)webViewDidStartLoad:(UIWebView *)webView{
+-(void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation{
+    NSLog(@"开始加载");
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:[NSNumber numberWithInt:401] forKey:@"code"];
     [dict setObject:@"webview 开始加载" forKey:@"message"];
     [dict setObject:@"success" forKey:@"content"];
     
     [self messagePost:dict];
+
 }
 
-// Sent after a web view finishes loading a frame. 请求发送之后,并且服务器已经返回响应之后调用该方法
-- (void)webViewDidFinishLoad:(UIWebView *)webView{
+//当内容开始返回时调用
+
+-(void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation{
+    NSLog(@"内容开始返回");
+
+}
+
+//加载完成之后调用
+
+-(void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation{
+    NSLog(@"加载完成");
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:[NSNumber numberWithInt:402] forKey:@"code"];
     [dict setObject:@"webview 加载完成" forKey:@"message"];
@@ -153,130 +189,147 @@
     
     
     
-    JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
-    //定义好JS要调用的方法, share就是调用的share方法名
-    context[@"pageFinish"] = ^() {
-        
-        NSArray *args = [JSContext currentArguments];
-        JSValue *height = args[0];
-        NSLog(@"测量完成 %@",height);
+//    JSContext *context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+//    //定义好JS要调用的方法, share就是调用的share方法名
+//    context[@"pageFinish"] = ^() {
+//
+//        NSArray *args = [JSContext currentArguments];
+//        JSValue *height = args[0];
+//        NSLog(@"测量完成 %@",height);
+//        NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
+//        [dict2 setObject:[NSNumber numberWithInt:201] forKey:@"code"];
+//        [dict2 setObject:@"测量成功V" forKey:@"message"];
+//        [dict2 setObject:[NSNumber numberWithDouble:height.toDouble] forKey:@"content"];
+//
+//        [self messagePost:dict2];
+//    };
+//    context[@"allImageUrls"] = ^() {
+//
+//        NSArray *args = [JSContext currentArguments];
+//        JSValue *url = args[0];
+//        NSLog(@"allImageUrls完成 -> %@",url);
+//        NSArray * array = [url.toString componentsSeparatedByString:@","];
+//        self->mImageUrlArray=[NSMutableArray arrayWithArray:array];
+//
+//    };
+//    context[@"showImageClick"] = ^() {
+//
+//        NSArray *args = [JSContext currentArguments];
+//        JSValue *url = args[0];
+//        NSLog(@"图片点击事件完成 %@",url);
+//        //当前点击的图片的角标
+//        int index =0;
+//        if (self->mImageUrlArray!=nil) {
+//            for (int i=0; i<self->mImageUrlArray.count; i++) {
+//                NSString *itemUrl = self->mImageUrlArray[i];
+//                if ([itemUrl isEqualToString:url.toString]) {
+//                    index=i;
+//                    break;
+//                }
+//            }
+//            NSLog(@"图片点击事件完成  %d %@  %@",index,url,self->mImageUrlArray);
+//
+//
+//            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+//            [dict setObject:[NSNumber numberWithInt:203] forKey:@"code"];
+//            [dict setObject:@"图片点击 方法回调" forKey:@"message"];
+//            [dict setObject:url.toString forKey:@"content"];
+//
+//             [dict setObject:url.toString forKey:@"url"];
+//            [dict setObject:[NSNumber numberWithInt:index] forKey:@"index"];
+//            if (self->mImageUrlArray!=nil) {
+//                [dict setObject:self->mImageUrlArray forKey:@"images"];
+//            }
+//            [self messagePost:dict];
+//
+//        }
+//    };
+//
+//            context[@"otherJsMethodCall"] = ^() {
+//
+//                NSArray *args = [JSContext currentArguments];
+//                JSValue *url = args[0];
+//                NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
+//                [dict2 setObject:[NSNumber numberWithInt:202] forKey:@"code"];
+//                [dict2 setObject:@"js 方法回调" forKey:@"message"];
+//                [dict2 setObject:url.toString forKey:@"content"];
+//                 [self messagePost:dict2];
+//
+//            };
+//    context[@"console"][@"log"] = ^(JSValue * msg) {
+//        NSLog(@"H5  log : %@", msg);
+//    };
+//    context[@"console"][@"warn"] = ^(JSValue * msg) {
+//        NSLog(@"H5  warn : %@", msg);
+//    };
+//    context[@"console"][@"error"] = ^(JSValue * msg) {
+//        NSLog(@"H5  error : %@", msg);
+//
+//    };
+
+    
+  
+    
+    NSString * jsStr  =@"javascript:pageFinish(document.body.getBoundingClientRect().height)";
+
+        [webView evaluateJavaScript:jsStr completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+
+          
+           
+
+        }];
+    
+    
+    [webView evaluateJavaScript:@"document.body.scrollHeight" completionHandler:^(id _Nullable result,NSError *_Nullable error) {
+            //获取页面高度
+            CGFloat scrollHeight = [result doubleValue];
+            NSLog(@"scrollHeight 即为所求：%f",scrollHeight);
+        NSLog(@"测量完成 %f",scrollHeight);
         NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
         [dict2 setObject:[NSNumber numberWithInt:201] forKey:@"code"];
         [dict2 setObject:@"测量成功V" forKey:@"message"];
-        [dict2 setObject:[NSNumber numberWithDouble:height.toDouble] forKey:@"content"];
+        [dict2 setObject:[NSNumber numberWithFloat:scrollHeight] forKey:@"content"];
         
         [self messagePost:dict2];
-    };
-    context[@"allImageUrls"] = ^() {
-        
-        NSArray *args = [JSContext currentArguments];
-        JSValue *url = args[0];
-        NSLog(@"allImageUrls完成 -> %@",url);
-        NSArray * array = [url.toString componentsSeparatedByString:@","];
-        self->mImageUrlArray=[NSMutableArray arrayWithArray:array];
-        
-    };
-    context[@"showImageClick"] = ^() {
-        
-        NSArray *args = [JSContext currentArguments];
-        JSValue *url = args[0];
-        NSLog(@"图片点击事件完成 %@",url);
-        //当前点击的图片的角标
-        int index =0;
-        if (self->mImageUrlArray!=nil) {
-            for (int i=0; i<self->mImageUrlArray.count; i++) {
-                NSString *itemUrl = self->mImageUrlArray[i];
-                if ([itemUrl isEqualToString:url.toString]) {
-                    index=i;
-                    break;
-                }
-            }
-            NSLog(@"图片点击事件完成  %d %@  %@",index,url,self->mImageUrlArray);
-            
-            
-            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-            [dict setObject:[NSNumber numberWithInt:203] forKey:@"code"];
-            [dict setObject:@"图片点击 方法回调" forKey:@"message"];
-            [dict setObject:url.toString forKey:@"content"];
-            
-             [dict setObject:url.toString forKey:@"url"];
-            [dict setObject:[NSNumber numberWithInt:index] forKey:@"index"];
-            if (self->mImageUrlArray!=nil) {
-                [dict setObject:self->mImageUrlArray forKey:@"images"];
-            }
-            [self messagePost:dict];
-            
-        }
-    };
+        }];
 
-            context[@"otherJsMethodCall"] = ^() {
-
-                NSArray *args = [JSContext currentArguments];
-                JSValue *url = args[0];
-                NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
-                [dict2 setObject:[NSNumber numberWithInt:202] forKey:@"code"];
-                [dict2 setObject:@"js 方法回调" forKey:@"message"];
-                [dict2 setObject:url.toString forKey:@"content"];
-                 [self messagePost:dict2];
-
-            };
-    context[@"console"][@"log"] = ^(JSValue * msg) {
-        NSLog(@"H5  log : %@", msg);
-    };
-    context[@"console"][@"warn"] = ^(JSValue * msg) {
-        NSLog(@"H5  warn : %@", msg);
-    };
-    context[@"console"][@"error"] = ^(JSValue * msg) {
-        NSLog(@"H5  error : %@", msg);
-     
-    };
-
-    
-    [webView stringByEvaluatingJavaScriptFromString:@"javascript:pageFinish(document.body.getBoundingClientRect().height)"];
-   
-    
-    if (htmlImageIsClick) {
-        [webView stringByEvaluatingJavaScriptFromString:@"javascript:getAllImgSrc(document.body.innerHTML)"];
-        [webView stringByEvaluatingJavaScriptFromString:constjsGetImages];//注入js方法
-        //执行
-        NSString *urlResurlt = [webView stringByEvaluatingJavaScriptFromString:@"getImages()"];
-
-        //添加图片可点击js
-        
-        [webView stringByEvaluatingJavaScriptFromString:imageClickStr];
-        //获取所有的 image url
-         [webView stringByEvaluatingJavaScriptFromString:imageUrlsStr];
-        [webView stringByEvaluatingJavaScriptFromString:@"getImageUrls()"];
-        
-        [webView stringByEvaluatingJavaScriptFromString:@"registerImageClickAction();"];
-    }
-    
-    
-
-    
-    
 }
+//实现js注入方法的协议方法
 
-// Sent if a web view failed to load a frame. 网页请求失败则会调用该方法
--(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-    
+- (void)userContentController:(WKUserContentController *)userContentController
+
+      didReceiveScriptMessage:(WKScriptMessage *)message {
+
+    //找到对应js端的方法名,获取messge.body
+    NSLog(@"实现js注入方法的协议方法 %@", message.name);
+
+    if ([message.name isEqualToString:@"collectSendKey"]) {
+
+
+
+        NSLog(@"%@", message.body);
+
+       
+
+    }
+
+}
+//加载失败时调用
+
+-(void)webView:(WKWebView *)webView didFailLoadWithError:(nonnull NSError *)error{
+    NSLog(@"加载失败 error : %@",error.description);
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:[NSNumber numberWithInt:404] forKey:@"code"];
     [dict setObject:@"webview 加载出错" forKey:@"message"];
     [dict setObject:@"err" forKey:@"content"];
-    
     [self messagePost:dict];
+
+}
+- (nonnull UIView *)view {
+    return _webView;
 }
 
-// 开始
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    
-}
 
-// 结束
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    
-}
 
 int _lastPosition;
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
