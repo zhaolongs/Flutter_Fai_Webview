@@ -68,41 +68,42 @@ class FaiWebViewWidget extends StatefulWidget {
   final Widget footerWidget;
   final Widget appBar;
   final double webViewHeight;
+  final double minHeight;
 
-  FaiWebViewWidget(
-      {
-      //webview 加载网页链接
-      this.url,
-      //webview 加载 完整的 html 文件数据  如 <html> .... </html>
-      // 不完整的 html 文件数据 如 <p></p> 配置到此项，用此属性来加载，只会渲染 <p> ... </p> 中已有的样式 不会适配移动端显示
-      this.htmlData,
-      //webview 加载完整的 html 文件数据 或者是 不完整的 html 文件数据 如 <p></p>
-      //不完整的 html 文件数据 如 <p></p> 配置到此项，会自动将不完整的 html 文件数据 添加 <html><head> .. </head> <body> 原来的内容 </body></html>,并适配移动端
-      this.htmlBlockData,
-      //输出 Log 日志功能
-      this.isLog = false,
-      // 为 Html 页面中所有的图片添加 点击事件 并通过回调 通知 Flutter 页面
-      // 只有使用 htmlBlockData 属性加载的页面才会有此效果
-      this.htmlImageIsClick = false,
-      // Html 页面中图片点击回调
-      this.imageCallBack,
-      // Html 页面中所有的消息回调
-      this.callback,
-      this.controller,
-      this.scrollController,
-      //混合加载时 WebView 顶部的 Widget
-      this.headerWidget,
-      this.onRefresh,
-      this.appBar,
-      //是否显示默认的加载中
-      this.showLoading = true,
-      //自定义加载中 Widget
-      this.loadginWidget,
-      //WebView 下面的 Widget
-      this.footerWidget,
-      //webView 的高度 如果指定了 会使用这里的值 如果未指定 会自动测量
-      this.webViewHeight,
-      Key key})
+  FaiWebViewWidget({
+    //webview 加载网页链接
+    this.url,
+    //webview 加载 完整的 html 文件数据  如 <html> .... </html>
+    // 不完整的 html 文件数据 如 <p></p> 配置到此项，用此属性来加载，只会渲染 <p> ... </p> 中已有的样式 不会适配移动端显示
+    this.htmlData,
+    //webview 加载完整的 html 文件数据 或者是 不完整的 html 文件数据 如 <p></p>
+    //不完整的 html 文件数据 如 <p></p> 配置到此项，会自动将不完整的 html 文件数据 添加 <html><head> .. </head> <body> 原来的内容 </body></html>,并适配移动端
+    this.htmlBlockData,
+    //输出 Log 日志功能
+    this.isLog = false,
+    // 为 Html 页面中所有的图片添加 点击事件 并通过回调 通知 Flutter 页面
+    // 只有使用 htmlBlockData 属性加载的页面才会有此效果
+    this.htmlImageIsClick = false,
+    // Html 页面中图片点击回调
+    this.imageCallBack,
+    // Html 页面中所有的消息回调
+    this.callback,
+    this.controller,
+    this.scrollController,
+    //混合加载时 WebView 顶部的 Widget
+    this.headerWidget,
+    this.onRefresh,
+    this.appBar,
+    //是否显示默认的加载中
+    this.showLoading = true,
+    //自定义加载中 Widget
+    this.loadginWidget,
+    //WebView 下面的 Widget
+    this.footerWidget,
+    //webView 的高度 如果指定了 会使用这里的值 如果未指定 会自动测量
+    this.webViewHeight,
+    this.minHeight,
+    Key key})
       : super(key: key);
 
   final bool showLoading;
@@ -118,9 +119,10 @@ class FaiWebViewWidget extends StatefulWidget {
 class AndroidWebViewState extends State<FaiWebViewWidget> {
   double _webViewHeight;
   double _defaultWebViewHeight = 40;
+
   ///滑动布局控制器
   ScrollController _scrollController = new ScrollController();
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -206,7 +208,8 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       case ScrollEndNotification:
         print("滚动停止");
         double offset = _scrollController.offset;
-        if (widget.footerWidget==null&&offset == _scrollController.position.maxScrollExtent) {
+        if (widget.footerWidget == null &&
+            offset == _scrollController.position.maxScrollExtent) {
           print("滚动停止  _scrollPhysics");
           _scrollPhysics = NeverScrollableScrollPhysics();
           setState(() {});
@@ -223,9 +226,9 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     } else {
       return Column(
         children: <Widget>[
-          widget.headerWidget==null?Container():widget.headerWidget,
+          widget.headerWidget == null ? Container() : widget.headerWidget,
           buildContainer(),
-          widget.footerWidget==null?Container():widget.footerWidget,
+          widget.footerWidget == null ? Container() : widget.footerWidget,
         ],
       );
     }
@@ -233,7 +236,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
 
   Container buildContainer() {
     return Container(
-      height: _webViewHeight==null?_defaultWebViewHeight:_webViewHeight,
+      height: _webViewHeight == null ? _defaultWebViewHeight : _webViewHeight,
       child: Stack(
         children: [
           buildFaiWebViewItemWidget(),
@@ -282,12 +285,18 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   callBack(int code, String msg, content) {
     //加载页面完成后 对页面重新测量的回调
     if (code == 201) {
-      double widgetPerentHeight = MediaQuery.of(context).size.height * 3;
+      double widgetPerentHeight = MediaQuery
+          .of(context)
+          .size
+          .height * 3;
       findCurrentDy();
-      double flagHeight = widgetPerentHeight - _dy;
-      if(_webViewHeight==null) {
+      double flagHeight = widgetPerentHeight ;
+      if (_webViewHeight == null) {
         if (content <= widgetPerentHeight) {
           _webViewHeight = content;
+          if (widget.minHeight != null && _webViewHeight < widget.minHeight) {
+            _webViewHeight = widget.minHeight;
+          }
           isScrollHex = false;
         } else {
           _webViewHeight = widgetPerentHeight;
@@ -398,11 +407,11 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
 
   FaiWebViewItemWidgetState(this.callback,
       {this.url,
-      this.htmlData,
-      this.htmlBlockData,
-      this.isLog,
-      this.htmlImageIsClick = false,
-      this.imageCallBack});
+        this.htmlData,
+        this.htmlBlockData,
+        this.isLog,
+        this.htmlImageIsClick = false,
+        this.imageCallBack});
 
   @override
   void initState() {
@@ -571,6 +580,7 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
   /// 监听Stream，每次值改变的时候，更新Text中的内容
   StreamBuilder<double> buildAndroidWebView() {
     return StreamBuilder<double>(
+
       ///绑定stream
       stream: _streamController.stream,
 
