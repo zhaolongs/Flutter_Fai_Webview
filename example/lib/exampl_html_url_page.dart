@@ -33,7 +33,6 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
           )
         ],
       ),
-
     );
   }
 
@@ -130,7 +129,9 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
   }
 
   // 页面
-  String htmlUrl = "https://blog.csdn.net/zl18603543572";
+  // String htmlUrl = "https://blog.csdn.net/zl18603543572";
+  String htmlUrl =
+      "http://api.jinbangshichuang.com/learncoal/h5/news/details/2292.html";
 
   ///通过url加载页面
   FaiWebViewWidget buildFaiWebViewWidget() {
@@ -140,7 +141,7 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
       //webview 加载信息回调
       callback: callBack,
       //图片回调
-      imageCallBack:imageClickBackFunction,
+      imageCallBack: imageClickBackFunction,
       //控制器
       controller: _faiWebViewController,
       //输出日志
@@ -172,8 +173,7 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
   }
 
   ///图片点击事件回调
-  void imageClickBackFunction(int index, String url, List<String> images){
-
+  void imageClickBackFunction(int index, String url, List<String> images) {
     print("图片回调-------------------------");
     print("|image url  $url ");
     print("|index $index images length ${images.length}");

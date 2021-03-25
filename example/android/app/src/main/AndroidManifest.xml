@@ -10,6 +10,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Webview插件"
         android:hardwareAccelerated="true"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
