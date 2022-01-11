@@ -56,7 +56,7 @@ class ExamplHtmlStringPageState extends State<ExamplHtmlStringPage> {
       isLog: true,
     );
   }
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     //这里没有使用到
     //当FaiWebViewWidget 被嵌套在可滑动的 widget 中，必须设置 FaiWebViewWidget 的高度

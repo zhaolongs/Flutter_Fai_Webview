@@ -28,7 +28,7 @@
   //获取具体的参数内容 可以将 JSON文本转 对象或者是数组
   function testAlert2(value) {
 
-    console.log(' 这里是JS 的方法 传的参数是  ' + value);
+    console.log(' testAlert2 这里是JS 的方法 传的参数是  ' + value);
     ///交Json文本转对象
     var obj = JSON.parse(value);
     console.log(' 解析字符串的数据  ' + obj.test);
@@ -51,7 +51,8 @@
     if (sys === 'android') {
       controll.otherJsMethodCall(json);
     } else {
-      otherJsMethodCall(json);
+      window.webkit.messageHandlers.otherJsMethodCall.postMessage(json);
+      //otherJsMethodCall(json);
     }
   }
 
@@ -67,6 +68,7 @@
       return 'ios';
     }
   }
+
 
 
 </script>

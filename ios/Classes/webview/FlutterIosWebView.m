@@ -9,7 +9,7 @@
 #import "FlutterIosWebView.h"
 #import <WebKit/WebKit.h>
 #import <JavaScriptCore/JavaScriptCore.h>
-@interface FlutterIosWebView() <WKUIDelegate,UIScrollViewDelegate,WKNavigationDelegate>
+@interface FlutterIosWebView() <WKUIDelegate,UIScrollViewDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 
 @end
 
@@ -38,7 +38,13 @@
 
             config.preferences.javaScriptCanOpenWindowsAutomatically = NO;
 
-            config.userContentController = [[WKUserContentController alloc] init];
+           
+        
+       
+        WKUserContentController *userContentController = [[WKUserContentController alloc] init];
+        [userContentController addScriptMessageHandler:self name:@"otherJsMethodCall"];
+
+        config.userContentController = userContentController;
 
             config.processPool = [[WKProcessPool alloc] init];
 
@@ -130,7 +136,10 @@
         NSDictionary *dict = call.arguments;
         NSString *jsMethod = dict[@"string"];
         if (_webView!=nil) {
-           
+            [_webView evaluateJavaScript:jsMethod completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+                NSLog(@"%@--%@",result,error);
+            }];
+
         }
     }else  if ([[call method] isEqualToString:@"goBack"]) {
         if (_webView!=nil&&[_webView canGoBack]) {
@@ -295,25 +304,21 @@
 
 }
 //实现js注入方法的协议方法
-
-- (void)userContentController:(WKUserContentController *)userContentController
-
-      didReceiveScriptMessage:(WKScriptMessage *)message {
-
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    // message.name   message.body 获取参数
     //找到对应js端的方法名,获取messge.body
-    NSLog(@"实现js注入方法的协议方法 %@", message.name);
-
-    if ([message.name isEqualToString:@"collectSendKey"]) {
-
-
-
-        NSLog(@"%@", message.body);
-
-       
-
-    }
-
+    
+    NSLog(@"实现js注入方法的协议方法body %@", message.body);
+    NSLog(@"实现js注入方法的协议方法 name %@", message.name);
+    
+    NSMutableDictionary *dict2 = [NSMutableDictionary dictionary];
+                   [dict2 setObject:[NSNumber numberWithInt:202] forKey:@"code"];
+                   [dict2 setObject:@"js 方法回调" forKey:@"message"];
+                   [dict2 setObject:message.body forKey:@"content"];
+                    [self messagePost:dict2];
+    
 }
+
 //加载失败时调用
 
 -(void)webView:(WKWebView *)webView didFailLoadWithError:(nonnull NSError *)error{

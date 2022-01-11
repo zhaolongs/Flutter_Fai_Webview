@@ -138,7 +138,7 @@ import 'package:flutter_fai_webview/flutter_fai_webview.dart';
   ///[code]消息类型标识
   ///[msg] 消息内容
   ///[content] 回传的参数
-  void callBack(int code, String msg, content) {
+  void callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     //这里没有使用到
     //当FaiWebViewWidget 被嵌套在可滑动的 widget 中，必须设置 FaiWebViewWidget 的高度
@@ -205,7 +205,7 @@ import 'package:flutter_fai_webview/flutter_fai_webview.dart';
     setState(() {});
   }
 
-  void callBack(int code, String msg, content) {
+  void callBack(int ?code, String ?msg, content) {
     String call = "回调 code:" +
         code.toString() +
         " msg:" +
@@ -442,7 +442,7 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
     });
   }
 
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     if (code == 201) {
       //更新高度
@@ -511,7 +511,8 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
     if (sys === 'android') {
       controll.otherJsMethodCall(json);
     } else {
-      otherJsMethodCall(json);
+      window.webkit.messageHandlers.otherJsMethodCall.postMessage(json);
+      ///otherJsMethodCall(json);
     }
   }
 
@@ -580,7 +581,7 @@ RaisedButton(
 
 ```java
   ///FaiWebViewWidget 的回调处理
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
    
     if (code == 202) {
       /// json.encode(mapData); //Map转化JSON字符串

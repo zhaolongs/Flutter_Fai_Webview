@@ -15,7 +15,7 @@ class DefaultHtmlBlockDataPageState extends State<HtmlAssetStringPage> {
   double webViewHeight = 100;
 
   //要显示的页面内容
-  Widget childWidget;
+  Widget ?childWidget;
   String htmlBlockData =
       "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p>加载中</p></body></html>";
 
@@ -94,7 +94,7 @@ class DefaultHtmlBlockDataPageState extends State<HtmlAssetStringPage> {
       ///构建
       builder: (BuildContext context, var snap) {
         ///加载完成的html数据
-        String htmlData = snap.data;
+        String? htmlData = snap.data;
         //使用插件 FaiWebViewWidget
         if (htmlData == null) {
           return CircularProgressIndicator();
@@ -113,7 +113,7 @@ class DefaultHtmlBlockDataPageState extends State<HtmlAssetStringPage> {
     );
   }
 
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     //这里没有使用到
     //当FaiWebViewWidget 被嵌套在可滑动的 widget 中，必须设置 FaiWebViewWidget 的高度

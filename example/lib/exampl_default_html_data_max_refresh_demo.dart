@@ -30,14 +30,14 @@ class DefaultMaxHtmlDataRefreshPageState extends State<DefaultMaxHtmlDataRefresh
     );
   }
 
-  FaiWebViewWidget webViewWidget;
+  FaiWebViewWidget ?webViewWidget;
 
   //原生 发送给 Flutter 的消息
   String message = "--";
   double webViewHeight = 100;
 
   //要显示的页面内容
-  Widget childWidget;
+  Widget ? childWidget;
   String htmlUrl = "https://blog.csdn.net/zl18603543572";
 
   @override
@@ -139,7 +139,7 @@ class DefaultMaxHtmlDataRefreshPageState extends State<DefaultMaxHtmlDataRefresh
     );
   }
 
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
 
     if (code == 201) {

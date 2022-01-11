@@ -58,12 +58,11 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
   double _dy = 0.0;
 
   findCurrentDy() {
-    RenderBox findRenderObject = context.findRenderObject();
+    RenderObject? findRenderObject = context.findRenderObject();
     if (findRenderObject != null) {
-      Offset localOffset = findRenderObject.localToGlobal(Offset.zero);
-      if (localOffset != null) {
-        _dy = localOffset.dy;
-      }
+      Size size = findRenderObject.paintBounds.size;
+      var vector = findRenderObject.getTransformTo(null).getTranslation();
+      _dy= vector.y;
     }
   }
 
@@ -184,7 +183,7 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage> {
 
   ScrollPhysics _scrollPhysics = ClampingScrollPhysics();
 
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     if (code == 201) {
       double widgetPerentHeight = MediaQuery.of(context).size.height;

@@ -87,9 +87,9 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
   ///前进功能
   Future rightForwordFunction() async {
     ///判断是否可前进
-    bool forword = await _faiWebViewController.canForword();
+    bool? forword = await _faiWebViewController.canForword();
     print("是否可前进$forword");
-    if (forword) {
+    if (forword!) {
       /// 如果可退 后退浏览器的历史
       _faiWebViewController.forword();
     } else {
@@ -101,9 +101,9 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
   ///如果不可后退 就退出当前 Widget 页面
   Future leftBackFunction(BuildContext context) async {
     ///判断是否可退 如果可退
-    bool back = await _faiWebViewController.canBack();
+    bool?  back = await _faiWebViewController.canBack();
     print("是否可后退 $back");
-    if (back) {
+    if (back!) {
       /// 如果可退 后退浏览器的历史
       _faiWebViewController.back();
     } else {
@@ -155,7 +155,7 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
   ///[code]消息类型标识
   ///[msg] 消息内容
   ///[content] 回传的参数
-  void callBack(int code, String msg, content) {
+  void callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     //这里没有使用到
     //当FaiWebViewWidget 被嵌套在可滑动的 widget 中，必须设置 FaiWebViewWidget 的高度

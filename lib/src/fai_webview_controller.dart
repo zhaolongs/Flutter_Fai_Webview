@@ -15,27 +15,27 @@ import 'package:flutter/material.dart';
 ///typedef关键字，用来声明一种类型，当一个函数类型分配给一个变量时，保留类型信息
 ///按钮状态监听
 typedef FaiWebViewListener = void Function(
-    int type, Map<String, dynamic> event);
+    int type, Map<String, dynamic>? event);
 
-typedef FaiWebViewBackListener = Future<bool> Function(
-    int type, Map<String, dynamic> event);
+typedef FaiWebViewBackListener = Future<bool?> Function(
+    int type, Map<String, dynamic>? event);
 ///控制器
 class FaiWebViewController {
-  FaiWebViewListener _flashAnimationListener;
-  FaiWebViewBackListener _faiWebViewBackListener;
+  FaiWebViewListener? _flashAnimationListener;
+  FaiWebViewBackListener? _faiWebViewBackListener;
   ///Flutter调用Html中的Js方法
   ///[parameterMap]为参数内容
   ///[jsMethodName]为调用JS方法的名称
   void toJsFunction({
-    @required String jsMethodName,
-    Map<String, dynamic> parameterMap,
+    required String jsMethodName,
+    Map<String, dynamic>? parameterMap,
   }) {
     if (_flashAnimationListener != null) {
       if (parameterMap == null) {
         parameterMap = new Map();
       }
       parameterMap["jsMethodName"] = jsMethodName;
-      _flashAnimationListener(2, parameterMap);
+      _flashAnimationListener!(2, parameterMap);
     }
   }
 
@@ -48,7 +48,7 @@ class FaiWebViewController {
     _faiWebViewBackListener =listener;
   }
   ///刷新页面的方法
-  void refresh({String htmlData, String htmlBlockData, String htmlUrl}) {
+  void refresh({String? htmlData, String? htmlBlockData, String? htmlUrl}) {
     if (_flashAnimationListener != null) {
       Map<String, dynamic> map = Map();
       if (htmlUrl != null) {
@@ -60,33 +60,33 @@ class FaiWebViewController {
       if (htmlData != null) {
         map["htmlData"] = htmlData;
       }
-      _flashAnimationListener(1, map);
+      _flashAnimationListener!(1, map);
     }
   }
 
   ///返回历史页面
   void back(){
     if (_flashAnimationListener != null) {
-      _flashAnimationListener(3, null);
+      _flashAnimationListener!(3, null);
     }
   }
   ///向前
   void forword(){
     if (_flashAnimationListener != null) {
-      _flashAnimationListener(4, null);
+      _flashAnimationListener!(4, null);
     }
   }
-  Future<bool> canBack() async{
+  Future<bool?> canBack() async{
     if (_faiWebViewBackListener != null) {
-     return await _faiWebViewBackListener(1, null);
+     return await _faiWebViewBackListener!(1, null);
     }else{
       return Future.value(false);
     }
   }
 
-  Future<bool> canForword() async{
+  Future<bool?> canForword() async{
     if (_faiWebViewBackListener != null) {
-      return await _faiWebViewBackListener(2, null);
+      return await _faiWebViewBackListener!(2, null);
     }else{
       return Future.value(false);
     }

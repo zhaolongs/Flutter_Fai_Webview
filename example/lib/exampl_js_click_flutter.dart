@@ -15,8 +15,9 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
   //原生 发送给 Flutter 的消息
   String message = "--";
 
+  String ? mhtmlData ;
   //要显示的页面内容
-  Widget childWidget;
+  Widget ? childWidget;
   String htmlBlockData =
       "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p>加载中</p></body></html>";
 
@@ -59,7 +60,7 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
                 RaisedButton(
                   child: Text("重新加载页面"),
                   onPressed: () {
-                    faiWebViewController.refresh();
+                    faiWebViewController.refresh(htmlData: mhtmlData);
                   },
                 ),
                 RaisedButton(
@@ -67,7 +68,7 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
                   onPressed: () {
                     ///向JS方法中传的参数
                     Map<String, dynamic> map = new Map();
-                    map["test"] = "这是Flutter中传的参数";
+                    map["test"] = "这是Flutter中传的参数33333";
 
                     ///参数一为调用JS的方法名称
                     ///参数二为向JS中传递的参数
@@ -95,11 +96,14 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
       ///构建
       builder: (BuildContext context, var snap) {
         ///加载完成的html数据
-        String htmlData = snap.data;
+        String ? htmlData = snap.data;
         //使用插件 FaiWebViewWidget
         if (htmlData == null) {
           return CircularProgressIndicator();
         }
+
+        mhtmlData = htmlData;
+
 
         ///通过配置 htmlBlockData 来渲染
         return buildFaiWebViewWidget(htmlData);
@@ -124,7 +128,7 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
 
 
   ///FaiWebViewWidget 的回调处理
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
 
     if (code == 202) {
       /// json.encode(mapData); //Map转化JSON字符串

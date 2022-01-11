@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_fai_webview/flutter_fai_webview.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+
 
 ///   混合页面加载
 ///   一般用于商品详情页面的添加
@@ -87,34 +87,34 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage3> {
     );
   }
 
-  Swiper buildSwiper() {
-    return new Swiper(
-      // 横向
-      scrollDirection: Axis.horizontal,
-      // 布局构建
-      itemBuilder: (BuildContext context, int index) {
-        return buildImage(index);
-      },
-      //条目个数
-      itemCount: imageList.length,
-      // 自动翻页
-      autoplay: true,
-      //点击事件
-      onTap: (index) {
-        print(" 点击 " + index.toString());
-      },
-      // 相邻子条目视窗比例
-      viewportFraction: 1,
-      // 布局方式
-      //layout: SwiperLayout.STACK,
-      // 用户进行操作时停止自动翻页
-      autoplayDisableOnInteraction: true,
-      // 无线轮播
-      loop: true,
-      //当前条目的缩放比例
-      scale: 1,
-    );
-  }
+  // Swiper buildSwiper() {
+  //   return new Swiper(
+  //     // 横向
+  //     scrollDirection: Axis.horizontal,
+  //     // 布局构建
+  //     itemBuilder: (BuildContext context, int index) {
+  //       return buildImage(index);
+  //     },
+  //     //条目个数
+  //     itemCount: imageList.length,
+  //     // 自动翻页
+  //     autoplay: true,
+  //     //点击事件
+  //     onTap: (index) {
+  //       print(" 点击 " + index.toString());
+  //     },
+  //     // 相邻子条目视窗比例
+  //     viewportFraction: 1,
+  //     // 布局方式
+  //     //layout: SwiperLayout.STACK,
+  //     // 用户进行操作时停止自动翻页
+  //     autoplayDisableOnInteraction: true,
+  //     // 无线轮播
+  //     loop: true,
+  //     //当前条目的缩放比例
+  //     scale: 1,
+  //   );
+  // }
 
   Image buildImage(int index) {
     return new Image.network(
@@ -130,7 +130,7 @@ class MaxUrlHexRefreshState extends State<DefaultHexRefreshPage3> {
     });
   }
 
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     setState(() {
       message =

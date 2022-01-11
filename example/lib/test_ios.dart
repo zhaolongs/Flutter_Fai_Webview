@@ -75,7 +75,7 @@ class MaxUrlRefreshState extends State<DefaultUrlPage> {
     });
   }
 
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     if (code == 201) {
       print("webViewHeight " + content.toString());

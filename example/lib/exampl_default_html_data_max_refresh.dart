@@ -29,14 +29,14 @@ class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage> {
     );
   }
 
-  FaiWebViewWidget webViewWidget;
+  FaiWebViewWidget ?webViewWidget;
 
   //原生 发送给 Flutter 的消息
   String message = "--";
   double webViewHeight = 100;
 
   //要显示的页面内容
-  Widget childWidget;
+  Widget ?childWidget;
   String htmlBlockData =
       "<p><br/></p><p>生物真题&nbsp;</p><p><img src=\"http://pic.studyyoun.com/1543767087584\" title=\"\" alt=\"\"/></p><p><img src=\"http://pic.studyyoun.com/1543767100547\" title=\"\" alt=\"\"/></p><p><br/></p><p><br/></p><p><br/></p>";
 
@@ -65,7 +65,7 @@ class DefaultHtmlBlockDataPageState extends State<DefaultHtmlBlockDataPage> {
     );
   }
 
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String ?msg, content) {
     //加载页面完成后 对页面重新测量的回调
     //这里没有使用到
     //当FaiWebViewWidget 被嵌套在可滑动的 widget 中，必须设置 FaiWebViewWidget 的高度

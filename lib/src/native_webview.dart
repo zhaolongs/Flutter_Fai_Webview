@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/src/fai_webview_controller.dart';
-import 'native_webview_event.dart';
+
 
 /// 向 Flutter 中发送消息
 /// code
@@ -31,13 +31,13 @@ import 'native_webview_event.dart';
 
 class FaiWebViewWidget extends StatefulWidget {
   //加载的网页 URL
-  final String url;
+  final String? url;
 
   //加载 完整html 文件数据 如 <html><head> .... .. </head></html>
-  final String htmlData;
+  final String? htmlData;
 
   //加载 html 代码块 如<p> .... </p>
-  final String htmlBlockData;
+  final String? htmlBlockData;
 
   //日志输出
   final bool isLog;
@@ -46,69 +46,70 @@ class FaiWebViewWidget extends StatefulWidget {
   final bool htmlImageIsClick;
 
   ///下拉刷新回调
-  final Function onRefresh;
+  final Function? onRefresh;
 
   /// [code]  原生 Android iOS 回调 Flutter 的消息类型标识
   /// [message]  消息类型日志
   /// [content]  回调的基本数据
-  final Function(int code, String message, dynamic content) callback;
+  final Function(int ?code, String ?message, dynamic ?content)? callback;
 
   /// 图片点击回调
   ///[index] HTML 中图片索引
   /// [url] 当前点击的图片的地址
   /// [images] HTML中所有的图片的集合
-  final Function(int index, String url, List<String> images) imageCallBack;
+  final Function(int index, String url, List<String> images)? imageCallBack;
 
   ///操作webView的控制器
-  final FaiWebViewController controller;
+  final FaiWebViewController? controller;
 
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
 
-  final Widget headerWidget;
-  final Widget footerWidget;
-  final Widget appBar;
-  final double webViewHeight;
-  final double minHeight;
+  final Widget? headerWidget;
+  final Widget? footerWidget;
+  final Widget? appBar;
+  final double? webViewHeight;
+  final double? minHeight;
 
-  FaiWebViewWidget({
-    //webview 加载网页链接
-    this.url,
-    //webview 加载 完整的 html 文件数据  如 <html> .... </html>
-    // 不完整的 html 文件数据 如 <p></p> 配置到此项，用此属性来加载，只会渲染 <p> ... </p> 中已有的样式 不会适配移动端显示
-    this.htmlData,
-    //webview 加载完整的 html 文件数据 或者是 不完整的 html 文件数据 如 <p></p>
-    //不完整的 html 文件数据 如 <p></p> 配置到此项，会自动将不完整的 html 文件数据 添加 <html><head> .. </head> <body> 原来的内容 </body></html>,并适配移动端
-    this.htmlBlockData,
-    //输出 Log 日志功能
-    this.isLog = false,
-    // 为 Html 页面中所有的图片添加 点击事件 并通过回调 通知 Flutter 页面
-    // 只有使用 htmlBlockData 属性加载的页面才会有此效果
-    this.htmlImageIsClick = false,
-    // Html 页面中图片点击回调
-    this.imageCallBack,
-    // Html 页面中所有的消息回调
-    this.callback,
-    this.controller,
-    this.scrollController,
-    //混合加载时 WebView 顶部的 Widget
-    this.headerWidget,
-    this.onRefresh,
-    this.appBar,
-    //是否显示默认的加载中
-    this.showLoading = true,
-    //自定义加载中 Widget
-    this.loadginWidget,
-    //WebView 下面的 Widget
-    this.footerWidget,
-    //webView 的高度 如果指定了 会使用这里的值 如果未指定 会自动测量
-    this.webViewHeight,
-    this.minHeight,
-    Key key})
+  FaiWebViewWidget(
+      {
+      //webview 加载网页链接
+      this.url,
+      //webview 加载 完整的 html 文件数据  如 <html> .... </html>
+      // 不完整的 html 文件数据 如 <p></p> 配置到此项，用此属性来加载，只会渲染 <p> ... </p> 中已有的样式 不会适配移动端显示
+      this.htmlData,
+      //webview 加载完整的 html 文件数据 或者是 不完整的 html 文件数据 如 <p></p>
+      //不完整的 html 文件数据 如 <p></p> 配置到此项，会自动将不完整的 html 文件数据 添加 <html><head> .. </head> <body> 原来的内容 </body></html>,并适配移动端
+      this.htmlBlockData,
+      //输出 Log 日志功能
+      this.isLog = false,
+      // 为 Html 页面中所有的图片添加 点击事件 并通过回调 通知 Flutter 页面
+      // 只有使用 htmlBlockData 属性加载的页面才会有此效果
+      this.htmlImageIsClick = false,
+      // Html 页面中图片点击回调
+      this.imageCallBack,
+      // Html 页面中所有的消息回调
+      this.callback,
+      this.controller,
+      this.scrollController,
+      //混合加载时 WebView 顶部的 Widget
+      this.headerWidget,
+      this.onRefresh,
+      this.appBar,
+      //是否显示默认的加载中
+      this.showLoading = true,
+      //自定义加载中 Widget
+      this.loadginWidget,
+      //WebView 下面的 Widget
+      this.footerWidget,
+      //webView 的高度 如果指定了 会使用这里的值 如果未指定 会自动测量
+      this.webViewHeight,
+      this.minHeight,
+      Key? key})
       : super(key: key);
 
   final bool showLoading;
 
-  final Widget loadginWidget;
+  final Widget? loadginWidget;
 
   @override
   State<StatefulWidget> createState() {
@@ -117,7 +118,7 @@ class FaiWebViewWidget extends StatefulWidget {
 }
 
 class AndroidWebViewState extends State<FaiWebViewWidget> {
-  double _webViewHeight;
+  double? _webViewHeight;
   double _defaultWebViewHeight = 40;
 
   ///滑动布局控制器
@@ -133,7 +134,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.appBar,
+      appBar: widget.appBar as PreferredSizeWidget?,
       body: buildRefreshHexWidget(),
     );
   }
@@ -141,7 +142,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   double _dy = 0.0;
 
   findCurrentDy() {
-    RenderBox findRenderObject = context.findRenderObject();
+    RenderBox? findRenderObject = context.findRenderObject() as RenderBox?;
     if (findRenderObject != null) {
       Offset localOffset = findRenderObject.localToGlobal(Offset.zero);
       if (localOffset != null) {
@@ -163,7 +164,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     if (widget.onRefresh != null) {
       itemWidget = RefreshIndicator(
         //下拉刷新触发方法
-        onRefresh: widget.onRefresh,
+        onRefresh: widget.onRefresh as Future<void> Function(),
         //设置webViewWidget
         child: itemWidget,
       );
@@ -225,13 +226,26 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       return buildContainer();
     } else {
       return Column(
-        children: <Widget>[
-          widget.headerWidget == null ? Container() : widget.headerWidget,
+        children: [
+          buildHeader(),
           buildContainer(),
-          widget.footerWidget == null ? Container() : widget.footerWidget,
+          buildFoot(),
         ],
       );
     }
+  }
+
+  buildHeader(){
+    if( widget.headerWidget == null){
+      return Container();
+    }
+    return  widget.headerWidget!;
+  }
+  buildFoot(){
+    if( widget.footerWidget == null){
+      return Container();
+    }
+    return  widget.footerWidget!;
   }
 
   Container buildContainer() {
@@ -253,7 +267,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
           child: Text("加载中..."),
         );
       } else {
-        return widget.loadginWidget;
+        return widget.loadginWidget!;
       }
     } else {
       return Container();
@@ -282,19 +296,16 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
 
   bool isHideLoading = false;
 
-  callBack(int code, String msg, content) {
+  callBack(int ?code, String? msg, content) {
     //加载页面完成后 对页面重新测量的回调
     if (code == 201) {
-      double widgetPerentHeight = MediaQuery
-          .of(context)
-          .size
-          .height * 3;
+      double widgetPerentHeight = MediaQuery.of(context).size.height * 3;
       findCurrentDy();
-      double flagHeight = widgetPerentHeight ;
+      double flagHeight = widgetPerentHeight;
       if (_webViewHeight == null) {
         if (content <= widgetPerentHeight) {
           _webViewHeight = content;
-          if (widget.minHeight != null && _webViewHeight < widget.minHeight) {
+          if (widget.minHeight != null && _webViewHeight! < widget.minHeight!) {
             _webViewHeight = widget.minHeight;
           }
           isScrollHex = false;
@@ -314,21 +325,20 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       setState(() {});
     }
     if (widget.callback != null) {
-      widget.callback(code, msg, content);
+      widget.callback!(code, msg, content);
     }
   }
 }
 
-@immutable
 class FaiWebViewItemWidget extends StatefulWidget {
   //加载的网页 URL
-  final String url;
+  final String? url;
 
   //加载 完整html 文件数据 如 <html><head> .... .. </head></html>
-  final String htmlData;
+  final String? htmlData;
 
   //加载 html 代码块 如<p> .... </p>
-  final String htmlBlockData;
+  final String? htmlBlockData;
 
   //日志输出
   final bool isLog;
@@ -339,16 +349,16 @@ class FaiWebViewItemWidget extends StatefulWidget {
   /// [code]  原生 Android iOS 回调 Flutter 的消息类型标识
   /// [message]  消息类型日志
   /// [content]  回调的基本数据
-  final Function(int code, String message, dynamic content) callback;
+  final Function(int? code, String? message, dynamic content)? callback;
 
   /// 图片点击回调
   ///[index] HTML 中图片索引
   /// [url] 当前点击的图片的地址
   /// [images] HTML中所有的图片的集合
-  final Function(int index, String url, List<String> images) imageCallBack;
+  final Function(int? index, String? url, List<String>? images)? imageCallBack;
 
   ///操作webView的控制器
-  final FaiWebViewController controller;
+  final FaiWebViewController? controller;
 
   FaiWebViewItemWidget({
     //webview 加载网页链接
@@ -373,52 +383,36 @@ class FaiWebViewItemWidget extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return FaiWebViewItemWidgetState(callback,
-        url: url,
-        htmlBlockData: htmlBlockData,
-        isLog: isLog,
-        htmlImageIsClick: htmlImageIsClick,
-        imageCallBack: imageCallBack,
-        htmlData: htmlData);
+    return FaiWebViewItemWidgetState();
   }
 }
 
 class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
-  //加载的网页 URL
-  String url;
-
   //自定义网页中的所有的图片的点击事件处理
-  bool htmlImageIsClick = false;
 
   //加载 完整html 文件数据 如 <html><head> .... .. </head></html>
-  String htmlData;
 
   //加载 html 代码块 如<p> .... </p>
-  String htmlBlockData;
 
   //日志输出
-  bool isLog = false;
+
   int viewId = -1;
-  MethodChannel _channel;
+  late MethodChannel _channel;
 
-  //回调
-  Function(int code, String message, dynamic content) callback;
-  Function(int index, String url, List<String> images) imageCallBack;
+  String? mUrl;
 
-  FaiWebViewItemWidgetState(this.callback,
-      {this.url,
-        this.htmlData,
-        this.htmlBlockData,
-        this.isLog,
-        this.htmlImageIsClick = false,
-        this.imageCallBack});
+  String? mHtmlData;
+  String? mHtmlBlockData;
 
   @override
   void initState() {
     super.initState();
+    mUrl = widget.url;
+    mHtmlData = widget.htmlData;
+    mHtmlBlockData = widget.htmlBlockData;
     if (widget.controller != null) {
-      widget.controller.setListener(webViewListener);
-      widget.controller.setBackListener(webViewBackListener);
+      widget.controller!.setListener(webViewListener);
+      widget.controller!.setBackListener(webViewBackListener);
     }
   }
 
@@ -437,7 +431,7 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
     }
   }
 
-  Future<bool> webViewBackListener(int type, Map<String, dynamic> event) {
+  Future<bool?> webViewBackListener(int type, Map<String, dynamic>? event) {
     if (type == 1) {
       return canGoBack();
     } else if (type == 2) {
@@ -451,22 +445,22 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
     ///刷新页面方法
     ///目前1.0.0版本还不可动态修改内容
     if (type == 1) {
-      String htmlData = event["htmlData"];
-      String htmlBlockData = event["htmlBlockData"];
-      String htmlUrl = event["htmlUrl"];
+      String? htmlData = event["htmlData"];
+      String? htmlBlockData = event["htmlBlockData"];
+      String? htmlUrl = event["htmlUrl"];
 
       if (htmlData != null) {
-        this.htmlData = htmlData;
+        mHtmlData = htmlData;
       }
       if (htmlBlockData != null) {
-        this.htmlBlockData = htmlBlockData;
+        mHtmlBlockData = htmlBlockData;
       }
       if (htmlUrl != null) {
-        this.url = htmlUrl;
+        mUrl = htmlUrl;
       }
       refresh();
     } else if (type == 2) {
-      String jsMethodName = event["jsMethodName"];
+      String? jsMethodName = event["jsMethodName"];
 
       ///Flutter调用 Html中的Js方法
       loadJsMethod("$jsMethodName('${json.encode(event)}')");
@@ -506,8 +500,8 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
       //String method = call.method;
       Map arguments = call.arguments;
 
-      int code = arguments["code"];
-      String message = arguments["message"];
+      int? code = arguments["code"];
+      String? message = arguments["message"];
       dynamic content = arguments["content"];
       print("native_webview:code-> " +
           code.toString() +
@@ -517,19 +511,19 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
           content.toString());
 
       if (code == 203) {
-        int index = arguments["index"];
-        String url = arguments["url"];
-        List<String> urls = arguments["urls"];
-        if (imageCallBack != null) {
-          imageCallBack(index, url, urls);
+        int? index = arguments["index"];
+        String? url = arguments["url"];
+        List<String>? urls = arguments["urls"];
+        if (widget.imageCallBack != null) {
+          widget.imageCallBack!(index, url, urls);
         }
       } else if (code == 201) {
         _streamController.add(1.0);
       }
 
-      if (callback != null) {
+      if (widget.callback != null) {
         print("native_webview callback");
-        callback(code, message, content);
+        widget.callback!(code, message, content);
       } else {
         print("native_webview callback is null ");
       }
@@ -539,9 +533,9 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
 
   void loadUrl() async {
     _channel.invokeMethod('load', {
-      "url": url,
-      "htmlData": htmlData,
-      "htmlBlockData": htmlBlockData,
+      "url": mUrl,
+      "htmlData": mHtmlData,
+      "htmlBlockData": mHtmlBlockData,
     });
   }
 
@@ -557,7 +551,7 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
     _channel.invokeMethod('goForward');
   }
 
-  Future<bool> canGoBack() async {
+  Future<bool?> canGoBack() async {
     if (Platform.isAndroid) {
       return await _channel.invokeMethod('canGoBack');
     } else {
@@ -565,7 +559,7 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
     }
   }
 
-  Future<bool> canGoForward() async {
+  Future<bool?> canGoForward() async {
     if (Platform.isAndroid) {
       return await _channel.invokeMethod('canGoForward');
     } else {
@@ -580,7 +574,6 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
   /// 监听Stream，每次值改变的时候，更新Text中的内容
   StreamBuilder<double> buildAndroidWebView() {
     return StreamBuilder<double>(
-
       ///绑定stream
       stream: _streamController.stream,
 
@@ -589,7 +582,7 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
 
       ///构建绑定数据的UI
       builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-        return buildStreamBuilder(snapshot.data);
+        return buildStreamBuilder(snapshot.data!);
       },
     );
   }
@@ -604,7 +597,7 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
         creationParams: {
           //调用view参数标识
           "isScrollListen": true,
-          "htmlImageIsClick": htmlImageIsClick
+          "htmlImageIsClick": widget.htmlImageIsClick
         },
         //参数的编码方式
         creationParamsCodec: const StandardMessageCodec(),
@@ -624,7 +617,7 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
       creationParams: {
         //调用view参数标识
         "isScrollListen": true,
-        "htmlImageIsClick": htmlImageIsClick
+        "htmlImageIsClick": widget.htmlImageIsClick
       },
       //参数的编码方式
       creationParamsCodec: const StandardMessageCodec(),

@@ -22,7 +22,7 @@ class DefaultHtmlBlockDataPageState
   double webViewHeight = 100;
 
   //要显示的页面内容
-  Widget childWidget;
+  Widget ? childWidget;
   String htmlBlockData =
       "<!DOCTYPE html><html> <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1,maximum-scale=1\"> </head> <body><p><br/></p><p>生物真题&nbsp;</p><p><img src=\"http://pic.studyyoun.com/1543767087584\" ></p><img src=\"http://pic.studyyoun.com/1543767087584\" ></p><img src=\"http://pic.studyyoun.com/1543767087584\" ></p><img src=\"http://pic.studyyoun.com/1543767087584\" ></p><br><script > function testAlert(){ console.log(\"console.log\"); alert(\"alert\")} </script> </body></html>";
 
@@ -67,7 +67,7 @@ class DefaultHtmlBlockDataPageState
               ? Container(
                   color: Colors.grey,
                   padding: EdgeInsets.all(20),
-                  child: Image.network(imageUrl),
+                  child: Image.network(imageUrl!),
                 )
               : Container(),
           isShowFloat
@@ -92,7 +92,7 @@ class DefaultHtmlBlockDataPageState
   }
 
   //当前点击的图片 URL
-  String imageUrl = null;
+  String ? imageUrl = null;
   //是否显示浮动按钮
   bool isShowFloat = false;
   /**
@@ -105,7 +105,7 @@ class DefaultHtmlBlockDataPageState
     setState(() {});
   }
 
-  void callBack(int code, String msg, content) {
+  void callBack(int ?code, String ?msg, content) {
     String call = "回调 code:" +
         code.toString() +
         " msg:" +
