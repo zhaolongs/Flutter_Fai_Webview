@@ -1,6 +1,6 @@
-# flutter_fai_webview_example
+# example
 
-Demonstrates how to use the flutter_fai_webview plugin.
+A new Flutter project.
 
 ## Getting Started
 

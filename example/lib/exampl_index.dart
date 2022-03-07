@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fai_webview_example/exampl_html_string_page.dart';
 import 'exampl_default_hex_refresh.dart';
 import 'exampl_default_hex_refresh2.dart';
 import 'exampl_default_hex_refresh3.dart';
@@ -32,11 +31,11 @@ class IndexPageState extends State<IndexPage> {
               padding: EdgeInsets.all(10),
               child: FlatButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => new ExamplHtmlStringPage()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   new MaterialPageRoute(
+                  //       builder: (context) => new ExamplHtmlStringPage()),
+                  // );
                 },
                 child: Text(
                   "HTML String 数据加载 ",

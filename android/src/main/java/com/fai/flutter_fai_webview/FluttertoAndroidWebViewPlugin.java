@@ -2,6 +2,7 @@ package com.fai.flutter_fai_webview;
 
 import com.fai.flutter_fai_webview.fac.WebViewViewFactory;
 
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.PluginRegistry;
 
 /**
@@ -9,8 +10,5 @@ import io.flutter.plugin.common.PluginRegistry;
  *
  */
 public class FluttertoAndroidWebViewPlugin {
-	public static void registerWith(PluginRegistry.Registrar registry) {
-		//设置标识
-		registry.platformViewRegistry().registerViewFactory("com.flutter_to_native_webview", new WebViewViewFactory(registry.messenger()));
-	}
+
 }

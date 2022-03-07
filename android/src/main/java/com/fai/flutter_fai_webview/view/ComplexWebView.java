@@ -2,13 +2,9 @@ package com.fai.flutter_fai_webview.view;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.provider.CalendarContract;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-
-import com.fai.flutter_fai_webview.R;
 import com.fai.flutter_fai_webview.utils.WebviewSetingUtils;
 
 import java.util.Map;
@@ -60,15 +56,15 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 		lWebView.setLayoutParams(lLayoutParams);
 		lWebView.setBackgroundColor(Color.WHITE);
 		
-		lWebView.setVisibility(View.GONE);
+		lWebView.setVisibility(View.VISIBLE);
 		
-		final FlutterView.FirstFrameListener[] listeners = new FlutterView.FirstFrameListener[1];
-		listeners[0] = new FlutterView.FirstFrameListener() {
-			@Override
-			public void onFirstFrame() {
-				mWebView.setVisibility(View.VISIBLE);
-			}
-		};
+//		final FlutterView.FirstFrameListener[] listeners = new FlutterView.FirstFrameListener[1];
+//		listeners[0] = new FlutterView.FirstFrameListener() {
+//			@Override
+//			public void onFirstFrame() {
+//				mWebView.setVisibility(View.VISIBLE);
+//			}
+//		};
 		this.mWebView = lWebView;
 //
 		//初始化设置

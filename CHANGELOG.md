@@ -1,10 +1,6 @@
-## 1.2.0
+## 1.3.0
 
- * notsafenull
-
-
-## 1.1.6 
-
+* notsafenull
 * 新增 WebView 添加 脚视图的功能
 * 新增自定义webView高度的功能
 
