@@ -13,7 +13,6 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
-import io.flutter.view.FlutterView;
 
 public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHandler {
 	private static String TAG = ComplexWebView.class.getSimpleName();

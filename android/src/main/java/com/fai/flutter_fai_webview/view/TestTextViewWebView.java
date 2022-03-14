@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.fai.flutter_fai_webview.utils.WebviewSetingUtils;
 
 import java.util.Map;
 
@@ -14,7 +13,7 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
-import io.flutter.view.FlutterView;
+
 
 public class TestTextViewWebView implements PlatformView, MethodChannel.MethodCallHandler {
 	private static String TAG = TestTextViewWebView.class.getSimpleName();

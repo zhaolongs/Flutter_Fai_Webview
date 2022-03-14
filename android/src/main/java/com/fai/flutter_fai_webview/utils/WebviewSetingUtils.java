@@ -365,7 +365,9 @@ public class WebviewSetingUtils {
 			Map<String, Object> lMap = new HashMap<>();
 			lMap.put("code", 404);
 			lMap.put("message", "webview 加载出错");
-			lMap.put("content", "" + error.getDescription().toString());
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+				lMap.put("content", "" + error.getDescription().toString());
+			}
 			post(lMap);
 			
 		}
