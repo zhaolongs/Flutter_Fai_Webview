@@ -61,6 +61,8 @@ public class WebviewSetingUtils {
 		WebSettings webSettings = webView.getSettings();
 		//如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
 		webSettings.setJavaScriptEnabled(true);
+		webSettings.setPluginState(WebSettings.PluginState.ON);// 可以使用插件
+		webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
 		//支持插件
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
 			webSettings.setPluginState(WebSettings.PluginState.ON);

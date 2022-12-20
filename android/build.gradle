@@ -3,6 +3,24 @@ version '1.0-SNAPSHOT'
 
 buildscript {
     repositories {
+        maven { url 'https://www.jitpack.io' }
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+        maven { url 'https://developer.huawei.com/repo/' }
+        maven {
+            url "http://download.flutter.io"
+            allowInsecureProtocol = true
+        }
+        maven { url 'https://storage.flutter-io.cn' }
+
+        maven { url 'https://repo1.maven.org/maven2/' }
+        maven {
+            url 'http://oss.sonatype.org/content/repositories/snapshots'
+            allowInsecureProtocol = true
+        }
+        mavenCentral()
         google()
         jcenter()
     }
@@ -14,6 +32,24 @@ buildscript {
 
 rootProject.allprojects {
     repositories {
+        maven { url 'https://www.jitpack.io' }
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
+        maven { url 'https://developer.huawei.com/repo/' }
+        maven {
+            url "http://download.flutter.io"
+            allowInsecureProtocol = true
+        }
+        maven { url 'https://storage.flutter-io.cn' }
+
+        maven { url 'https://repo1.maven.org/maven2/' }
+        maven {
+            url 'http://oss.sonatype.org/content/repositories/snapshots'
+            allowInsecureProtocol = true
+        }
+        mavenCentral()
         google()
         jcenter()
     }
@@ -31,4 +67,8 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+
 }
+//dependencies {
+//    api 'com.tencent.tbs.tbssdk:sdk:43903'
+//}

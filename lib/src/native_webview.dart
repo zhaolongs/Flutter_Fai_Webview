@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -132,6 +133,13 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   }
 
   @override
+  void didUpdateWidget(covariant FaiWebViewWidget oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    _webViewHeight = widget.webViewHeight;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.appBar as PreferredSizeWidget?,
@@ -170,22 +178,24 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
       );
     }
 
-    return NotificationListener(
-      onNotification: (ScrollNotification notification) {
-        //滑动信息处理
-        //根据不同的滑动信息来处理页面的特效
-        //如Widget 移动 、放大、缩小、旋转等等
-        notificationFunction(notification);
-        //可滚动组件在滚动过程中会发出ScrollNotification之外，
-        //还有一些其它的通知，
-        //如SizeChangedLayoutNotification、
-        //   KeepAliveNotification 、
-        //   LayoutChangedNotification等
-        //返回值类型为布尔值，当返回值为true时，阻止冒泡，
-        //其父级Widget将再也收不到该通知；当返回值为false 时继续向上冒泡通知。
-        return true;
-      },
-      child: itemWidget,
+    return SizedBox.expand(
+      child: NotificationListener(
+        onNotification: (ScrollNotification notification) {
+          //滑动信息处理
+          //根据不同的滑动信息来处理页面的特效
+          //如Widget 移动 、放大、缩小、旋转等等
+          notificationFunction(notification);
+          //可滚动组件在滚动过程中会发出ScrollNotification之外，
+          //还有一些其它的通知，
+          //如SizeChangedLayoutNotification、
+          //   KeepAliveNotification 、
+          //   LayoutChangedNotification等
+          //返回值类型为布尔值，当返回值为true时，阻止冒泡，
+          //其父级Widget将再也收不到该通知；当返回值为false 时继续向上冒泡通知。
+          return true;
+        },
+        child: itemWidget,
+      ),
     );
   }
 
@@ -249,8 +259,10 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
   }
 
   Container buildContainer() {
+    double? height =
+        _webViewHeight == null ? _defaultWebViewHeight : _webViewHeight;
     return Container(
-      height: _webViewHeight == null ? _defaultWebViewHeight : _webViewHeight,
+      height: height,
       child: Stack(
         children: [
           buildFaiWebViewItemWidget(),

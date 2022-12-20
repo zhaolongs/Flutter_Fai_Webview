@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'exampl_default_hex_refresh.dart';
 import 'exampl_default_hex_refresh2.dart';
 import 'exampl_default_hex_refresh3.dart';
@@ -6,6 +7,7 @@ import 'exampl_html_asset_string.dart';
 import 'exampl_html_url_page.dart';
 import 'exampl_js_click_flutter.dart';
 import 'exampl_loading_html_img_click.dart';
+import 'exampl_loading_html_video.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -86,7 +88,26 @@ class IndexPageState extends State<IndexPage> {
               ),
             ),
           ),
-
+          Align(
+            alignment: Alignment(0, -1),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => new DefaultHtmlVideoPage()),
+                  );
+                },
+                child: Text(
+                  "播放视频 ",
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment(0, -1),
             child: Padding(

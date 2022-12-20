@@ -101,7 +101,7 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
   ///如果不可后退 就退出当前 Widget 页面
   Future leftBackFunction(BuildContext context) async {
     ///判断是否可退 如果可退
-    bool?  back = await _faiWebViewController.canBack();
+    bool? back = await _faiWebViewController.canBack();
     print("是否可后退 $back");
     if (back!) {
       /// 如果可退 后退浏览器的历史
@@ -130,12 +130,15 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
 
   // 页面
   // String htmlUrl = "https://blog.csdn.net/zl18603543572";
+  // String htmlUrl =
+  //     "http://api.jinbangshichuang.com/learncoal/h5/news/details/2292.html";
   String htmlUrl =
-      "http://api.jinbangshichuang.com/learncoal/h5/news/details/2292.html";
+      "http://192.168.1.107:7073/learncoal/h5/news/video/details/249.html";
 
   ///通过url加载页面
   FaiWebViewWidget buildFaiWebViewWidget() {
     return FaiWebViewWidget(
+      key: UniqueKey(),
       //webview 加载网页链接
       url: htmlUrl,
       //webview 加载信息回调
@@ -155,7 +158,7 @@ class MaxUrlState extends State<ExamplHtmlUrlPage> {
   ///[code]消息类型标识
   ///[msg] 消息内容
   ///[content] 回传的参数
-  void callBack(int ?code, String ?msg, content) {
+  void callBack(int? code, String? msg, content) {
     //加载页面完成后 对页面重新测量的回调
     //这里没有使用到
     //当FaiWebViewWidget 被嵌套在可滑动的 widget 中，必须设置 FaiWebViewWidget 的高度

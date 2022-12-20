@@ -213,6 +213,20 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 					
 					stringBuilder.append("</head><body>");
 					stringBuilder.append(artContent);
+					stringBuilder.append("<script>");
+					stringBuilder.append("var ch=window.screen.height;var cw=window.screen.width;if(cw===undefined){cw=375;}");
+					stringBuilder.append(" var iframes = document.getElementsByTagName('iframe');");
+					stringBuilder.append("if(iframes!==undefined){");
+
+					stringBuilder.append(" for (var i = 0; i < iframes.length; i++) {");
+					stringBuilder.append("var item = iframes[i];var preHeight =cw*9/16;item.height=preHeight;");
+					stringBuilder.append("var src =item.src;console.log(\"src is  \"+src)");
+
+					stringBuilder.append("}");
+
+					stringBuilder.append("}");
+
+					stringBuilder.append("</script>");
 					stringBuilder.append("</body></html>");
 					
 					artContent = stringBuilder.toString();
@@ -220,6 +234,7 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 				if (mHtmlImageIsClick) {
 					artContent = setHtmlCotentSupportImagePreview(artContent);
 				}
+
 				mWebView.loadDataWithBaseURL(null, artContent, "text/html", "utf-8", null);
 			} else {
 				mWebviewSetingUtils.postError(-1, "数据异常,请重新进入");
