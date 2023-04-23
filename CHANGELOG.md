@@ -1,3 +1,7 @@
+## 1.3.1
+
+设置WebView的缓存策略
+
 ## 1.3.0
 
 * notsafenull
@@ -29,17 +33,17 @@ Container buildFaiWebViewWidget() {
 ```
 ## 1.1.5
 
- * 添加 加载中显示文案
- * 兼容部分机型有底部虚拟菜单栏无法监听回调问题
- * 优化 ScrollView 与 WebView 的兼容显示
+* 添加 加载中显示文案
+* 兼容部分机型有底部虚拟菜单栏无法监听回调问题
+* 优化 ScrollView 与 WebView 的兼容显示
 
 ## 1.1.4
 
- * 添加 Scrollview 与webview 的混合加载使用
+* 添加 Scrollview 与webview 的混合加载使用
 
 ## 1.1.2
 
- * 添加在加载 Html 字符串时 默认 编码为  utf-8 
+* 添加在加载 Html 字符串时 默认 编码为  utf-8 
 
 ## 1.1.1
 

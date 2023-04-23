@@ -57,13 +57,13 @@ class DefaultHtmlBlockDataPageState extends State<JSandFlutterUsePage> {
             bottom: 10,
             child: Wrap(
               children: [
-                RaisedButton(
+                OutlinedButton(
                   child: Text("重新加载页面"),
                   onPressed: () {
                     faiWebViewController.refresh(htmlData: mhtmlData);
                   },
                 ),
-                RaisedButton(
+                OutlinedButton(
                   child: Text("Flutter调用JS方法"),
                   onPressed: () {
                     ///向JS方法中传的参数

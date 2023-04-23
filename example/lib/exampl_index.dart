@@ -31,7 +31,7 @@ class IndexPageState extends State<IndexPage> {
             alignment: Alignment(0, -1),
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   // Navigator.push(
                   //   context,
@@ -39,11 +39,10 @@ class IndexPageState extends State<IndexPage> {
                   //       builder: (context) => new ExamplHtmlStringPage()),
                   // );
                 },
-                child: Text(
+                child: const Text(
                   "HTML String 数据加载 ",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.black,
               ),
             ),
           ),
@@ -51,7 +50,7 @@ class IndexPageState extends State<IndexPage> {
             alignment: Alignment(0, -1),
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -63,7 +62,6 @@ class IndexPageState extends State<IndexPage> {
                   "加载本地 Html , 有两种方式 一种是 assets 目录下的文件  一种是 Html 字条串 ",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.black,
               ),
             ),
           ),
@@ -71,7 +69,7 @@ class IndexPageState extends State<IndexPage> {
             alignment: Alignment(0, -1),
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -80,11 +78,10 @@ class IndexPageState extends State<IndexPage> {
                             new DefaultHtmlBlockImageClickPage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Html中的图片点击回调 ",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.black,
               ),
             ),
           ),
@@ -92,7 +89,7 @@ class IndexPageState extends State<IndexPage> {
             alignment: Alignment(0, -1),
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -104,7 +101,6 @@ class IndexPageState extends State<IndexPage> {
                   "播放视频 ",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.black,
               ),
             ),
           ),
@@ -112,7 +108,7 @@ class IndexPageState extends State<IndexPage> {
             alignment: Alignment(0, -1),
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -124,7 +120,6 @@ class IndexPageState extends State<IndexPage> {
                   " 低版本混合页面加载  ",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.black,
               ),
             ),
           ),
@@ -132,7 +127,7 @@ class IndexPageState extends State<IndexPage> {
             alignment: Alignment(0, -1),
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -144,7 +139,6 @@ class IndexPageState extends State<IndexPage> {
                   " 1.1.4 版本以上混合页面加载  ",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.black,
               ),
             ),
           ),
@@ -152,7 +146,7 @@ class IndexPageState extends State<IndexPage> {
             alignment: Alignment(0, -1),
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -164,7 +158,6 @@ class IndexPageState extends State<IndexPage> {
                   " 1.1.4 版本以上 Widget 中间使用 Widget 加载  ",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.black,
               ),
             ),
           ),
@@ -172,7 +165,7 @@ class IndexPageState extends State<IndexPage> {
             alignment: Alignment(0, -1),
             child: Padding(
               padding: EdgeInsets.all(10),
-              child: FlatButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -184,7 +177,6 @@ class IndexPageState extends State<IndexPage> {
                   " JS 与 Flutter的双向互调  ",
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.black,
               ),
             ),
           ),
@@ -198,7 +190,7 @@ class IndexPageState extends State<IndexPage> {
       alignment: Alignment(0, -1),
       child: Padding(
         padding: EdgeInsets.all(10),
-        child: FlatButton(
+        child: OutlinedButton(
           onPressed: () {
             Navigator.push(
               context,
@@ -210,7 +202,6 @@ class IndexPageState extends State<IndexPage> {
             "常用方式 通过 url 加载一个 html ",
             style: TextStyle(color: Colors.white),
           ),
-          color: Colors.black,
         ),
       ),
     );

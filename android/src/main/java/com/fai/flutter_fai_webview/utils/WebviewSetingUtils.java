@@ -107,13 +107,17 @@ public class WebviewSetingUtils {
 				webSettings.setAllowFileAccessFromFileURLs(true);
 				webSettings.setAllowUniversalAccessFromFileURLs(true);
 			}
-			webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 			webSettings.setAllowFileAccess(true); //设置可以访问文件
 		}
 		
 		webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-		
-		webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);  //设置 缓存模式
+
+		//LOAD_CACHE_ONLY: 不发网络请求资源，只读取缓存。
+		//LOAD_DEFAULT: 根据cache-control或者Last-Modified决定是否从网络上取数据。默认采用该方案
+		//LOAD_CACHE_NORMAL: 新版本已经废弃，同LOAD_DEFAULT
+		//LOAD_NO_CACHE: 不使用缓存，只从网络获取数据。
+		//LOAD_CACHE_ELSE_NETWORK:只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。本地没有缓存时才从网络上获取。
+		webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);  //设置 缓存模式
 		
 		
 		webSettings.setJavaScriptCanOpenWindowsAutomatically(true); //支持通过JS打开新窗口
