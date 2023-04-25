@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/src/fai_webview_controller.dart';
@@ -52,7 +51,7 @@ class FaiWebViewWidget extends StatefulWidget {
   /// [code]  原生 Android iOS 回调 Flutter 的消息类型标识
   /// [message]  消息类型日志
   /// [content]  回调的基本数据
-  final Function(int ?code, String ?message, dynamic ?content)? callback;
+  final Function(int ?code, String ?message, dynamic content)? callback;
 
   /// 图片点击回调
   ///[index] HTML 中图片索引
@@ -147,15 +146,13 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     );
   }
 
-  double _dy = 0.0;
+  //double _dy = 0.0;
 
   findCurrentDy() {
     RenderBox? findRenderObject = context.findRenderObject() as RenderBox?;
     if (findRenderObject != null) {
-      Offset localOffset = findRenderObject.localToGlobal(Offset.zero);
-      if (localOffset != null) {
-        _dy = localOffset.dy;
-      }
+      //Offset localOffset = findRenderObject.localToGlobal(Offset.zero);
+     // _dy = localOffset.dy;
     }
   }
 
@@ -313,7 +310,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     if (code == 201) {
       double widgetPerentHeight = MediaQuery.of(context).size.height * 3;
       findCurrentDy();
-      double flagHeight = widgetPerentHeight;
+      //double flagHeight = widgetPerentHeight;
       if (_webViewHeight == null) {
         if (content <= widgetPerentHeight) {
           _webViewHeight = content;
