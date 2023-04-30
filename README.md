@@ -15,10 +15,15 @@ Flutter是谷歌推出的最新的移动开发框架。
 
 
   
->* 2020-10-30 更新 1.1.5版本 
->  * 添加 加载中显示文案
-> * 兼容部分机型有底部虚拟菜单栏无法监听回调问题
- > * 优化 ScrollView 与 WebView 的兼容显示
+>2023年4月30日 更新 1.3.2  Andorid 支持设置webView的缓存模式
+```dart
+enum WebViewCacheMode {
+  LOAD_CACHE_ONLY, // 不发网络请求资源，只读取缓存。
+  LOAD_DEFAULT, //根据cache-control或者Last-Modified决定是否从网络上取数据。默认采用该方案
+  LOAD_NO_CACHE, //不使用缓存，只从网络获取数据。
+  LOAD_CACHE_ELSE_NETWORK //只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。本地没有缓存时才从网络上获取。
+}
+```
 
 * 2020-10-28 更新[1.1.4 版本 处理 Flutter与Html的混合页面加载](https://biglead.blog.csdn.net/article/details/109340398)
 
