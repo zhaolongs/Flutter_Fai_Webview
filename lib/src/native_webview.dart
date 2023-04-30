@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_fai_webview/src/fai_webview_controller.dart';
 
-
 /// 向 Flutter 中发送消息
 /// code
 /// 201 测量webview 成功
@@ -29,6 +28,13 @@ import 'package:flutter_fai_webview/src/fai_webview_controller.dart';
 /// // url 当前点击图片的链接 index 当前点击Html页面中所有图片中的角标 urls 所有图片的集合
 /// content: {"url":"http://pic.studyyoun.com/1543767087584","index":0,"urls":"http://pic.studyyoun.com/1543767087584,http://pic.studyyoun.com/1543767100547"}
 
+enum WebViewCacheMode {
+  LOAD_CACHE_ONLY, // 不发网络请求资源，只读取缓存。
+  LOAD_DEFAULT, //根据cache-control或者Last-Modified决定是否从网络上取数据。默认采用该方案
+  LOAD_NO_CACHE, //不使用缓存，只从网络获取数据。
+  LOAD_CACHE_ELSE_NETWORK //只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。本地没有缓存时才从网络上获取。
+}
+
 class FaiWebViewWidget extends StatefulWidget {
   //加载的网页 URL
   final String? url;
@@ -45,13 +51,15 @@ class FaiWebViewWidget extends StatefulWidget {
   //HTML中的图片添加点击事件
   final bool htmlImageIsClick;
 
+  final WebViewCacheMode webViewCacheMode;
+
   ///下拉刷新回调
   final Function? onRefresh;
 
   /// [code]  原生 Android iOS 回调 Flutter 的消息类型标识
   /// [message]  消息类型日志
   /// [content]  回调的基本数据
-  final Function(int ?code, String ?message, dynamic content)? callback;
+  final Function(int? code, String? message, dynamic content)? callback;
 
   /// 图片点击回调
   ///[index] HTML 中图片索引
@@ -82,6 +90,7 @@ class FaiWebViewWidget extends StatefulWidget {
       this.htmlBlockData,
       //输出 Log 日志功能
       this.isLog = false,
+      this.webViewCacheMode = WebViewCacheMode.LOAD_DEFAULT,
       // 为 Html 页面中所有的图片添加 点击事件 并通过回调 通知 Flutter 页面
       // 只有使用 htmlBlockData 属性加载的页面才会有此效果
       this.htmlImageIsClick = false,
@@ -152,7 +161,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     RenderBox? findRenderObject = context.findRenderObject() as RenderBox?;
     if (findRenderObject != null) {
       //Offset localOffset = findRenderObject.localToGlobal(Offset.zero);
-     // _dy = localOffset.dy;
+      // _dy = localOffset.dy;
     }
   }
 
@@ -242,17 +251,18 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     }
   }
 
-  buildHeader(){
-    if( widget.headerWidget == null){
+  buildHeader() {
+    if (widget.headerWidget == null) {
       return Container();
     }
-    return  widget.headerWidget!;
+    return widget.headerWidget!;
   }
-  buildFoot(){
-    if( widget.footerWidget == null){
+
+  buildFoot() {
+    if (widget.footerWidget == null) {
       return Container();
     }
-    return  widget.footerWidget!;
+    return widget.footerWidget!;
   }
 
   Container buildContainer() {
@@ -287,6 +297,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
     return FaiWebViewItemWidget(
       //webview 加载网页链接
       url: widget.url,
+      webViewCacheMode: widget.webViewCacheMode,
       htmlData: widget.htmlData,
       htmlBlockData: widget.htmlBlockData,
       htmlImageIsClick: widget.htmlImageIsClick,
@@ -305,7 +316,7 @@ class AndroidWebViewState extends State<FaiWebViewWidget> {
 
   bool isHideLoading = false;
 
-  callBack(int ?code, String? msg, content) {
+  callBack(int? code, String? msg, content) {
     //加载页面完成后 对页面重新测量的回调
     if (code == 201) {
       double widgetPerentHeight = MediaQuery.of(context).size.height * 3;
@@ -369,6 +380,8 @@ class FaiWebViewItemWidget extends StatefulWidget {
   ///操作webView的控制器
   final FaiWebViewController? controller;
 
+  final WebViewCacheMode webViewCacheMode;
+
   FaiWebViewItemWidget({
     //webview 加载网页链接
     this.url,
@@ -388,6 +401,7 @@ class FaiWebViewItemWidget extends StatefulWidget {
     // Html 页面中所有的消息回调
     this.callback,
     this.controller,
+    this.webViewCacheMode = WebViewCacheMode.LOAD_DEFAULT,
   });
 
   @override
@@ -583,13 +597,11 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
   /// 监听Stream，每次值改变的时候，更新Text中的内容
   StreamBuilder<double> buildAndroidWebView() {
     return StreamBuilder<double>(
-      ///绑定stream
+      //绑定stream
       stream: _streamController.stream,
-
-      ///默认的数据
+      //默认的数据
       initialData: 0.0,
-
-      ///构建绑定数据的UI
+      //构建绑定数据的UI
       builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
         return buildStreamBuilder(snapshot.data!);
       },
@@ -604,9 +616,9 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
         viewType: "com.flutter_to_native_webview",
         //参数初始化
         creationParams: {
-          //调用view参数标识
           "isScrollListen": true,
-          "htmlImageIsClick": widget.htmlImageIsClick
+          "htmlImageIsClick": widget.htmlImageIsClick,
+          "webViewCacheMode":widget.webViewCacheMode.toString(),
         },
         //参数的编码方式
         creationParamsCodec: const StandardMessageCodec(),

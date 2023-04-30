@@ -1,3 +1,15 @@
+
+## 1.3.2 
+ Andorid 支持设置webView的缓存模式
+```dart
+enum WebViewCacheMode {
+  LOAD_CACHE_ONLY, // 不发网络请求资源，只读取缓存。
+  LOAD_DEFAULT, //根据cache-control或者Last-Modified决定是否从网络上取数据。默认采用该方案
+  LOAD_NO_CACHE, //不使用缓存，只从网络获取数据。
+  LOAD_CACHE_ELSE_NETWORK //只要本地有，无论是否过期，或者no-cache，都使用缓存中的数据。本地没有缓存时才从网络上获取。
+}
+```
+
 ## 1.3.1
 
 设置WebView的缓存策略

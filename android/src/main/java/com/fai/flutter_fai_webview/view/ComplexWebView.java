@@ -22,6 +22,7 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 	private Context mContext;
 	private boolean mIsLog;
 	private boolean mHtmlImageIsClick;
+	private String webViewCacheMode = "LOAD_DEFAULT";
 	
 	
 	public ComplexWebView(Context context, BinaryMessenger messenger, int id, Map<String, Object> params) {
@@ -46,7 +47,17 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 			}
 			
 		}
-		
+
+
+		if (params != null && params.containsKey("webViewCacheMode")) {
+			//通过 url 来加载页面
+			try {
+				webViewCacheMode = (String) params.get("webViewCacheMode");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
 		
 		
 		//创建webview
@@ -69,7 +80,7 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 		//初始化设置
 		mWebviewSetingUtils = new WebviewSetingUtils();
 		//通用设置
-		mWebviewSetingUtils.initSetting(context, this.mWebView, mIsLog, mHtmlImageIsClick);
+		mWebviewSetingUtils.initSetting(context, this.mWebView, mIsLog, mHtmlImageIsClick,webViewCacheMode);
 		//注册消息监听
 		MethodChannel methodChannel = new MethodChannel(messenger, "com.flutter_to_native_webview_" + id);
 		methodChannel.setMethodCallHandler(this);
