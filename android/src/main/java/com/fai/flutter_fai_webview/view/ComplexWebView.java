@@ -2,6 +2,7 @@ package com.fai.flutter_fai_webview.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -118,13 +119,26 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 			initLoadHtml(methodCall);
 		} else if (lMethod.equals("goBack")) {
 			if (mWebView.canGoBack()) {
+				Log.d("fai-webview","调用goback");
 				mWebView.goBack();
 			}
 		} else if (lMethod.equals("goForward")) {
 			if (mWebView.canGoForward()) {
 				mWebView.goForward();
 			}
-		} else if (lMethod.equals("canGoForward")) {
+		}  else if (lMethod.equals("goClearHistory")) {
+			if (mWebView != null) {
+				Log.d("fai-webview","调用 goClearHistory");
+				mWebView.clearHistory();
+			}
+		}else if (lMethod.equals("goClearCache")) {
+			if (mWebView != null) {
+				Log.d("fai-webview","调用goClearCache");
+				mWebView.clearFormData();
+				//clearCache 方法的参数为 true，表示同时清除缓存和使用记录，如果为 false，则只清除缓存。
+				mWebView.clearCache(true);
+			}
+		}else if (lMethod.equals("canGoForward")) {
 			result.success(mWebView.canGoForward());
 		} else if (lMethod.equals("canGoBack")) {
 			result.success(mWebView.canGoBack());

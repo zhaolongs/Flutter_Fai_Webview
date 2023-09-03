@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
  * 可关注博客：https://blog.csdn.net/zl18603543572
  */
 
-
-
 ///typedef关键字，用来声明一种类型，当一个函数类型分配给一个变量时，保留类型信息
 ///按钮状态监听
 typedef FaiWebViewListener = void Function(
@@ -19,10 +17,12 @@ typedef FaiWebViewListener = void Function(
 
 typedef FaiWebViewBackListener = Future<bool?> Function(
     int type, Map<String, dynamic>? event);
+
 ///控制器
 class FaiWebViewController {
   FaiWebViewListener? _flashAnimationListener;
   FaiWebViewBackListener? _faiWebViewBackListener;
+
   ///Flutter调用Html中的Js方法
   ///[parameterMap]为参数内容
   ///[jsMethodName]为调用JS方法的名称
@@ -44,9 +44,10 @@ class FaiWebViewController {
     _flashAnimationListener = listener;
   }
 
-  void setBackListener(FaiWebViewBackListener listener){
-    _faiWebViewBackListener =listener;
+  void setBackListener(FaiWebViewBackListener listener) {
+    _faiWebViewBackListener = listener;
   }
+
   ///刷新页面的方法
   void refresh({String? htmlData, String? htmlBlockData, String? htmlUrl}) {
     if (_flashAnimationListener != null) {
@@ -64,30 +65,46 @@ class FaiWebViewController {
     }
   }
 
+//清除历史记录
+  void clearHistory() {
+    if (_flashAnimationListener != null) {
+      _flashAnimationListener!(5, null);
+    }
+  }
+
+  //清除缓存
+  void clearCache() {
+    if (_flashAnimationListener != null) {
+      _flashAnimationListener!(6, null);
+    }
+  }
+
   ///返回历史页面
-  void back(){
+  void back() {
     if (_flashAnimationListener != null) {
       _flashAnimationListener!(3, null);
     }
   }
+
   ///向前
-  void forword(){
+  void forword() {
     if (_flashAnimationListener != null) {
       _flashAnimationListener!(4, null);
     }
   }
-  Future<bool?> canBack() async{
+
+  Future<bool?> canBack() async {
     if (_faiWebViewBackListener != null) {
-     return await _faiWebViewBackListener!(1, null);
-    }else{
+      return await _faiWebViewBackListener!(1, null);
+    } else {
       return Future.value(false);
     }
   }
 
-  Future<bool?> canForword() async{
+  Future<bool?> canForword() async {
     if (_faiWebViewBackListener != null) {
       return await _faiWebViewBackListener!(2, null);
-    }else{
+    } else {
       return Future.value(false);
     }
   }

@@ -493,6 +493,12 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
     } else if (type == 4) {
       ///返回历史
       goForward();
+    }else if (type == 5) {
+      ///清除历史
+      goClearHistory();
+    }else if (type == 6) {
+      ///清除历史
+      goClearCache();
     }
   }
 
@@ -573,6 +579,13 @@ class FaiWebViewItemWidgetState extends State<FaiWebViewItemWidget> {
   void goForward() {
     _channel.invokeMethod('goForward');
   }
+  void goClearHistory(){
+    _channel.invokeMethod('goClearHistory');
+  }
+  void goClearCache(){
+    _channel.invokeMethod('goClearCache');
+  }
+
 
   Future<bool?> canGoBack() async {
     if (Platform.isAndroid) {
