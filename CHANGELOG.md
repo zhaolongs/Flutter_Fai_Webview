@@ -1,4 +1,23 @@
+## 1.3.3 
+ Android 支持清除历史记录 、清除缓存的功能
 
+```dart
+
+FaiWebViewController faiWebViewController = new FaiWebViewController();
+
+//点击按钮调用
+faiWebViewController.clearHistory();
+faiWebViewController.clearCache();
+
+//需要注意的是 WebView 需要绑定 
+
+FaiWebViewWidget(
+    controller: faiWebViewController,
+    ... 
+)
+
+
+```
 ## 1.3.2 
  Andorid 支持设置webView的缓存模式
 ```dart
