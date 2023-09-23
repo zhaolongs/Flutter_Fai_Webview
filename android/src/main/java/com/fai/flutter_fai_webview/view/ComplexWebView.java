@@ -98,7 +98,13 @@ public class ComplexWebView implements PlatformView, MethodChannel.MethodCallHan
 	
 	@Override
 	public void dispose() {
-		mWebView = null;
+// 		mWebView = null;
+		
+		// 这里解决android webview关闭页面后仍然播放声音的问题
+		mWebView.clearCache(true);
+		mWebView.removeAllViews();
+		mWebView.destroy();
+		
 	}
 	
 	@Override
